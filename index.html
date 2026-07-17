@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>REDEX | Nodes</title>
+    <link rel="icon" type="image/png" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
+    <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
+    <link rel="apple-touch-icon" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
+    <link rel="apple-touch-icon-precomposed" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed": "#050505",
+                    "inverse-on-surface": "#050505",
+                    "on-tertiary-fixed": "#050505",
+                    "on-surface-variant": "#a1a1a1",
+                    "primary-fixed-dim": "#ff3333",
+                    "outline-variant": "#1a1a1a",
+                    "surface-dim": "#050505",
+                    "secondary-container": "#1a1a1a",
+                    "error-container": "#93000a",
+                    "on-primary-fixed-variant": "#cc0000",
+                    "secondary-fixed-dim": "#c6c6c7",
+                    "surface-container-low": "#0a0a0a",
+                    "outline": "#333333",
+                    "secondary": "#ffffff",
+                    "on-tertiary-container": "#ffffff",
+                    "surface": "#050505",
+                    "inverse-surface": "#ffffff",
+                    "surface-tint": "#FF0000",
+                    "on-error-container": "#ffdad6",
+                    "surface-container-high": "#121212",
+                    "on-primary": "#ffffff",
+                    "surface-bright": "#1a1a1a",
+                    "on-surface": "#ffffff",
+                    "primary": "#FF0000",
+                    "on-primary-container": "#ffffff",
+                    "tertiary-container": "#1a1a1a",
+                    "error": "#ffb4ab",
+                    "tertiary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffffff",
+                    "primary-fixed": "#ffdad6",
+                    "on-secondary-container": "#ffffff",
+                    "surface-container": "#0a0a0a",
+                    "background": "#050505",
+                    "primary-container": "#FF0000",
+                    "surface-container-lowest": "#000000",
+                    "on-secondary": "#050505",
+                    "on-background": "#ffffff",
+                    "on-tertiary-fixed-variant": "#cccccc",
+                    "secondary-fixed": "#ffffff",
+                    "on-secondary-fixed-variant": "#cccccc",
+                    "inverse-primary": "#cc0000",
+                    "surface-variant": "#121212",
+                    "surface-container-highest": "#1a1a1a",
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed": "#050505",
+                    "tertiary-fixed-dim": "#cccccc"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.75rem",
+                    "lg": "0.75rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "8px",
+                    "margin-lg": "64px",
+                    "container-padding": "24px",
+                    "margin-sm": "16px",
+                    "gutter": "20px",
+                    "margin-md": "32px"
+            },
+            "fontFamily": {
+                    "label-bold": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Montserrat"],
+                    "headline-lg": ["Montserrat"],
+                    "display-xl": ["Montserrat"],
+                    "label-sm": ["Inter"],
+                    "headline-lg-mobile": ["Montserrat"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "label-bold": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "700"}],
+                    "display-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        body {
+            background-color: #050505;
+            color: #ffffff;
+            scroll-behavior: smooth;
+        }
+
+        .glass-card {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            transition: all 0.2s ease-in-out;
+            border-radius: 0.75rem;
+        }
+
+        .glass-card:hover {
+            border-color: #FF0000;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+        }
+
+        .glass-chip {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+        }
+
+        .red-glow {
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #050505;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #333333;
+        }
+
+        .scrollbar-none::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-none {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .hero-blur-deep {
+            filter: blur(24px) !important;
+            transition: filter 0.8s ease-in-out;
+        }
+
+        .card-locked-active {
+            position: relative;
+        }
+
+        @keyframes bounceSubtle {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.08); }
+        }
+        .animate-bounce-subtle {
+            animation: bounceSubtle 2s infinite ease-in-out;
+        }
+
+        .active-dot {
+            width: 4px;
+            height: 4px;
+            background-color: #FF0000;
+            display: inline-block;
+            margin-right: 4px;
+            border-radius: 9999px;
+            animation: pulse 2s infinite;
+        }
+
+        @media (min-width: 640px) {
+            .active-dot {
+                width: 6px;
+                height: 6px;
+                margin-right: 6px;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .frosted-sidebar {
+            background: rgba(5, 5, 5, 0.95);
+            border-right: 1px solid #1a1a1a;
+        }
+
+        .filter-dropdown {
+            background: #000000;
+            border: 1px solid #1a1a1a;
+            transition: all 0.1s ease;
+            border-radius: 0.75rem;
+        }
+
+        .filter-dropdown:hover {
+            border-color: #FF0000;
+        }
+
+        .toggle-btn {
+            background: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            transition: all 0.1s ease;
+            border-radius: 0.75rem;
+        }
+
+        .toggle-btn.active {
+            background: rgba(255, 0, 0, 0.05);
+            border-color: #FF0000;
+        }
+
+        .animate-card {
+            animation: cardEntrance 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        @keyframes marquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+        }
+
+        .animate-marquee {
+            display: inline-block;
+            animation: marquee 35s linear infinite;
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #toastContainer {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            pointer-events: none;
+        }
+
+        /* User Customized Styles */
+        .precision-quality {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chip-toggle {
+            background: #1e1e2f;
+            padding: 8px 18px;
+            border-radius: 30px;
+            border: 1px solid #333;
+            color: #aaa;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chip-toggle input[type="checkbox"] {
+            display: none; /* Ocultamos el checkbox nativo */
+        }
+
+        .chip-toggle:has(input:checked) {
+            background: #2a2a4a;
+            border-color: #6c5ce7;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(108, 92, 231, 0.2);
+        }
+
+        /* Para el grid de checkboxes avanzados */
+        .check-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px 15px;
+        }
+        .check-grid label {
+            font-size: 13px;
+            color: #ccc;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+    </style>
+    <!-- 
+        ========================================================================
+        MÓDULO DE PUBLICIDAD / ADVERTISING INTEGRATION MODULE
+        ========================================================================
+        ANÁLISIS DEL CÓDIGO PUBLICITARIO:
+        - Proveedor: Widget de cámaras externas de crxcr2.com (im_jerky).
+        - Parámetros clave:
+          * lang=en: Establece el idioma predeterminado en inglés.
+          * mode=prerecorded: Configura la reproducción de transmisiones en modo pregrabado.
+          * outlinkUrl: Enlace de afiliado de redirección/seguimiento (t.datsk11.com)
+            con identificadores de campaña para atribución (aff_sub4 y aff_sub5).
+        ========================================================================
+    -->
+    <script defer src="https://crxcr2.com/cams-widget-ext/im_jerky?&lang=en&mode=prerecorded&outlinkUrl=https://t.datsk11.com/418922/3788/0?target=banners&po=6456&aff_sub5=SF_006OG000004lmDN&aff_sub4=AT_0018"></script>
+
+    <!-- 
+        ========================================================================
+        MÓDULO DE PUBLICIDAD: POPIN REDIRECCIÓN (AFFSTENTIAL OVERLAY)
+        ========================================================================
+        ANÁLISIS DEL CÓDIGO PUBLICITARIO:
+        - Proveedor: PopIn Affstitial de crxcra.com.
+        - Lógica: Intercepta y redirecciona interacciones mediante un overlay premium.
+        - Configuración:
+          * url: Redirección de afiliado para monetización VIP.
+          * contentType: overlay (capa superpuesta interactiva de pantalla completa).
+          * coverOverlay: true (cobertura total de seguridad).
+          * expireDays: 0.01 (frecuencia óptima de impresión de anuncios).
+        ========================================================================
+    -->
+    <script src="https://crxcra.com/popin/latest/affstitial-min.js"></script>
+    <script>
+        var crakPopInParamsOverlay = {
+            url: 'https://t.datsk11.com/418922/3788/0?target=banners&po=6456&aff_sub5=SF_006OG000004lmDN&aff_sub4=AT_0019',
+            decryptUrl: false,
+            contentType: 'overlay',
+            coverOverlay: true, 
+            expireDays: 0.01
+        };
+    </script>
+
+    <!-- 
+        ========================================================================
+        MÓDULO DE PUBLICIDAD: POPUNDER INTELIGENTE (SCFTP9 MULTI-TAB)
+        ========================================================================
+        ANÁLISIS DEL CÓDIGO PUBLICITARIO:
+        - Proveedor: Sistema Popunder de static.scptp9.com (mnpw3.js).
+        - Lógica: Añade un disparador de nueva pestaña altamente optimizado en clics.
+        - Configuración:
+          * url: Redirección con parámetros de campaña avanzados para atribución premium (aff_sub4=AT_0005).
+          * newTab: true (abre de manera no intrusiva en una nueva pestaña del navegador).
+          * cookieExpires: 86401 (cooldown de 24 horas y 1 segundo para mejorar la experiencia de usuario).
+        ========================================================================
+    -->
+    <script type="text/javascript" src="//static.scptp9.com/mnpw3.js"></script>
+    <script>
+        mnpw.add('https://t.datsk11.com/418922/3788/0?target=banners&po=6456&aff_sub5=SF_006OG000004lmDN&aff_sub4=AT_0005&pud=scptp9', {
+            newTab: true, 
+            cookieExpires: 86401
+        });
+    </script>
+</head>
+<body class="custom-scrollbar bg-black overflow-x-hidden font-body-md">
+    <div id="toastContainer"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="fixed top-0 w-full h-[80px] md:h-[100px] z-50 bg-[#8b0000] border-b border-white/10 shadow-2xl overflow-hidden">
+        <!-- Accent Glow -->
+        <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-white/10 to-transparent pointer-events-none"></div>
+        
+        <div class="flex items-center justify-between px-4 md:px-margin-lg max-w-[1440px] mx-auto h-full relative z-10">
+            <!-- Left: Menu Trigger -->
+            <div class="flex items-center gap-4 md:gap-8">
+                <button class="p-2 text-white hover:bg-white/10 rounded-full transition-all" id="mobileMenuBtn">
+                    <span class="material-symbols-outlined notranslate text-3xl md:text-4xl" translate="no">menu</span>
+                </button>
+                
+                <div class="hidden md:flex items-center gap-6 group cursor-pointer" onclick="location.reload()">
+                    <div class="relative py-2">
+                        <img alt="Redex Logo" class="h-16 w-auto object-contain transition-all duration-700 group-hover:scale-110" src="https://i.ibb.co/Pv8MgvCJ/1000191175-removebg-preview.png"/>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-4xl lg:text-5xl font-black italic tracking-tighter text-white uppercase leading-none">REDEX</span>
+                        <div class="h-[3px] w-0 bg-white group-hover:w-full transition-all duration-500 rounded-full mt-1"></div>
+                    </div>
+                </div>
+
+                <nav class="hidden lg:flex items-center gap-8 ml-4">
+                    <a class="text-white font-bold border-b-2 border-white pb-1 font-label-bold text-label-bold uppercase tracking-wider" href="#">Nodes</a>
+                    <a class="text-white/60 font-medium hover:text-white transition-all duration-300 font-label-bold text-label-bold uppercase tracking-wider" href="#">Elite</a>
+                </nav>
+            </div>
+
+            <!-- Center: Logo (Mobile) / Search (Desktop) -->
+            <div class="flex items-center justify-center md:flex-1 md:max-w-xl md:px-8">
+                <!-- Mobile Logo Display -->
+                <div class="flex md:hidden items-center gap-2 group cursor-pointer" onclick="location.reload()">
+                    <img alt="Redex Logo" class="h-12 w-auto object-contain" src="https://i.ibb.co/Pv8MgvCJ/1000191175-removebg-preview.png"/>
+                    <span class="text-3xl font-black italic tracking-tighter text-white uppercase leading-none">REDEX</span>
+                </div>
+                
+                <!-- Desktop Search -->
+                <div class="hidden md:block w-full relative group">
+                    <span class="material-symbols-outlined notranslate absolute left-4 top-1/2 -translate-y-1/2 text-white/50 group-focus-within:text-white transition-colors" translate="no">search</span>
+                    <input id="intelSearch" class="w-full bg-black/30 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-sm font-medium focus:outline-none focus:border-white/30 focus:bg-black/50 transition-all placeholder:text-white/30 text-white shadow-inner" placeholder="SEARCH REDEX DATABASE..." type="text"/>
+                </div>
+            </div>
+
+            <!-- Right: User ID & Language (All) -->
+            <div class="flex items-center gap-4 justify-end">
+                <!-- Header User ID Input (Sleek Desktop version) -->
+                <div class="hidden md:flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 focus-within:border-white/30 transition-all">
+                    <span class="material-symbols-outlined notranslate text-white/50 text-[18px]" translate="no">vpn_key</span>
+                    <input id="headerUserIdInput" class="bg-transparent border-none text-[11px] font-black tracking-widest text-white outline-none w-[120px] placeholder:text-white/20 uppercase" placeholder="USER ID..." type="text" value="REDEX-SYS-01"/>
+                </div>
+                <button id="languageBtn" class="p-2 text-white hover:bg-white/10 rounded-full transition-all">
+                    <span class="material-symbols-outlined notranslate text-3xl" translate="no">language</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Side Navigation / Selector Panel -->
+    <aside id="mobileDrawer" class="h-full w-[320px] fixed left-0 top-0 z-[60] frosted-sidebar flex flex-col overflow-y-auto custom-scrollbar -translate-x-full transition-transform duration-500">
+        <!-- Brand Logo Area -->
+        <div class="p-8 flex items-center justify-between border-b border-white/5 bg-black/40 mb-6">
+            <div class="flex items-center gap-4">
+                <img alt="Redex Logo" class="h-12 w-auto object-contain" src="https://i.ibb.co/Pv8MgvCJ/1000191175-removebg-preview.png"/>
+                <div class="flex flex-col">
+                    <h2 class="text-2xl font-black tracking-tighter italic leading-none uppercase text-white">REDEX</h2>
+                    <span class="text-[9px] font-bold tracking-[0.2em] text-red-500 uppercase mt-1">● ELITE ACCESS</span>
+                </div>
+            </div>
+            <button id="closeDrawerBtn" class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors">
+                <span class="material-symbols-outlined text-on-surface-variant text-[18px]">close</span>
+            </button>
+        </div>
+        <!-- Discover Feed Action -->
+        <div class="px-4 mb-8">
+            <div id="discoverFeedBtn" class="relative bg-black/60 border border-white/5 rounded-xl p-4 flex items-center gap-3 cursor-pointer group hover:border-primary/30 transition-all">
+                <span class="inline-block w-1.5 h-1.5 bg-primary rounded-full animate-pulse"></span>
+                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary">home</span>
+                <span class="text-[12px] font-bold tracking-widest text-on-surface uppercase">Discover Feed</span>
+            </div>
+        </div>
+        <!-- Global Search -->
+        <div class="px-4 mb-8">
+            <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">search</span>
+                <input id="sidebarSearch" class="w-full bg-black/80 border border-white/5 rounded-xl py-3.5 pl-12 pr-4 text-[11px] font-bold tracking-widest uppercase focus:outline-none focus:border-primary transition-all placeholder:text-on-surface-variant/40" placeholder="GLOBAL SEARCH..." type="text"/>
+            </div>
+        </div>
+        <!-- Filter Groups -->
+        <div class="px-4 flex-1 space-y-6 overflow-y-auto max-h-[calc(100vh-280px)] custom-scrollbar">
+            <!-- User ID Input -->
+            <div class="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
+                <p class="text-[10px] font-bold tracking-[0.2em] text-primary uppercase pl-1">User Validation</p>
+                <div class="space-y-1">
+                    <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Redex User ID</span>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">vpn_key</span>
+                        <input type="text" id="userIdInput" class="bg-black/60 border border-white/5 rounded-xl py-3 pl-12 pr-4 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full uppercase" placeholder="ENTER USER ID" value="REDEX-SYS-01">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stream Config -->
+            <div class="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
+                <p class="text-[10px] font-bold tracking-[0.2em] text-primary uppercase pl-1">Stream Config</p>
+                <div class="space-y-3">
+                    <!-- ALL CATEGORIES -> Tag de la API -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">All Categories (Tag)</span>
+                        <input type="text" id="tagInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full placeholder:text-white/20 uppercase" placeholder="GIRLS, TEENS" value="girls">
+                    </div>
+                    
+                    <!-- LIMIT -> Límite de la API -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Limit</span>
+                        <input type="number" id="limitInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full uppercase" value="250" min="1" max="1000">
+                    </div>
+
+                    <!-- STRICT MODE -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Strict Mode</span>
+                        <div class="relative">
+                            <select id="strictSelect" class="w-full appearance-none bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none cursor-pointer focus:border-primary transition-all uppercase">
+                                <option value="0">OFF (PRIORITY)</option>
+                                <option value="1">ON (EXACT FILTER)</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+                        </div>
+                    </div>
+
+                    <!-- Priorizar (modelsList) -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Priorizar (Models List)</span>
+                        <input type="text" id="modelsListInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full placeholder:text-white/20 uppercase" placeholder="USUARIO1, USUARIO2">
+                    </div>
+
+                    <!-- Excluir (excludeModelsList) -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Excluir (Exclude List)</span>
+                        <input type="text" id="excludeModelsListInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full placeholder:text-white/20 uppercase" placeholder="USUARIO_NO, USUARIO_NO2">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Human Intel -->
+            <div class="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
+                <p class="text-[10px] font-bold tracking-[0.2em] text-primary uppercase pl-1">Human Intel</p>
+                <div class="space-y-3">
+                    <!-- INTERESTED -> profileInterestedIn -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Interested</span>
+                        <div class="relative">
+                            <select id="profileInterestedIn" class="w-full appearance-none bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none cursor-pointer focus:border-primary transition-all uppercase">
+                                <option value="">ANY</option>
+                                <option value="interestedInWomen">WOMEN</option>
+                                <option value="interestedInMen">MEN</option>
+                                <option value="interestedInTranssexuals">TRANSSEXUALS</option>
+                                <option value="interestedInEverybody">EVERYBODY</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+                        </div>
+                    </div>
+
+                    <!-- BODY -> profileBodyType -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Body</span>
+                        <div class="relative">
+                            <select id="profileBodyType" class="w-full appearance-none bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none cursor-pointer focus:border-primary transition-all uppercase">
+                                <option value="">ANY</option>
+                                <option value="bodyTypeThin">THIN</option>
+                                <option value="bodyTypeAverage">AVERAGE</option>
+                                <option value="bodyTypeAthletic">ATHLETIC</option>
+                                <option value="bodyTypeLarge">LARGE</option>
+                                <option value="bodyTypeCurvy">CURVY</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+                        </div>
+                    </div>
+
+                    <!-- ETHNICITY -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Ethnicity</span>
+                        <div class="relative">
+                            <select id="profileEthnicity" class="w-full appearance-none bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none cursor-pointer focus:border-primary transition-all uppercase">
+                                <option value="">ANY</option>
+                                <option value="ethnicityAsian">ASIAN</option>
+                                <option value="ethnicityEbony">EBONY</option>
+                                <option value="ethnicityLatino">LATINO</option>
+                                <option value="ethnicityWhite">WHITE</option>
+                                <option value="ethnicityMixed">MIXED</option>
+                                <option value="ethnicityIndian">INDIAN</option>
+                                <option value="ethnicityMiddleEastern">MIDDLE EASTERN</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+                        </div>
+                    </div>
+
+                    <!-- SUBCULTURE -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Subculture</span>
+                        <div class="relative">
+                            <select id="profileSubculture" class="w-full appearance-none bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none cursor-pointer focus:border-primary transition-all uppercase">
+                                <option value="">ANY</option>
+                                <option value="subcultureGamers">GAMERS</option>
+                                <option value="subcultureGoth">GOTH</option>
+                                <option value="subcultureBdsm">BDSM</option>
+                                <option value="subcultureMistresses">MISTRESSES</option>
+                                <option value="subcultureRomantic">ROMANTIC</option>
+                                <option value="subcultureHipster">HIPSTER</option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
+                        </div>
+                    </div>
+
+                    <!-- LANGUAGES -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Languages</span>
+                        <input type="text" id="modelsLanguageInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full placeholder:text-white/20 uppercase" placeholder="EN, ES, FR">
+                    </div>
+
+                    <!-- COUNTRIES -->
+                    <div class="space-y-1">
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Countries</span>
+                        <input type="text" id="modelsCountryInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full placeholder:text-white/20 uppercase" placeholder="US, GB, ES">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Precision Quality -->
+            <div class="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
+                <p class="text-[10px] font-bold tracking-[0.2em] text-primary uppercase pl-1">Precision Quality</p>
+                <div class="precision-quality">
+                    <!-- 4K HD -->
+                    <label class="chip-toggle select-none">
+                        <input type="checkbox" id="broadcastHD" checked>
+                        <span>4K HD</span>
+                    </label>
+
+                    <!-- VR 360 -->
+                    <label class="chip-toggle select-none">
+                        <input type="checkbox" id="broadcastVR">
+                        <span>VR 360</span>
+                    </label>
+
+                    <!-- NEW -->
+                    <label class="chip-toggle select-none">
+                        <input type="checkbox" id="isNew">
+                        <span>NEW</span>
+                    </label>
+
+                    <!-- REAL -->
+                    <label class="chip-toggle select-none">
+                        <input type="checkbox" id="mlBoost">
+                        <span>REAL</span>
+                    </label>
+
+                    <!-- MOVIL -->
+                    <label class="chip-toggle select-none">
+                        <input type="checkbox" id="broadcastMobile">
+                        <span>📱 MOVIL</span>
+                    </label>
+
+                    <!-- GOAL -->
+                    <label class="chip-toggle select-none">
+                        <input type="checkbox" id="goalEnabled">
+                        <span>🎯 GOAL</span>
+                    </label>
+
+                    <!-- ANAL -->
+                    <label class="chip-toggle select-none">
+                        <input type="checkbox" id="isMlAnal">
+                        <span>🔴 ANAL</span>
+                    </label>
+
+                    <!-- BJ -->
+                    <label class="chip-toggle select-none">
+                        <input type="checkbox" id="isMlBlowjob">
+                        <span>🔵 BJ</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Advanced Accordion -->
+            <details class="group border border-white/5 rounded-2xl bg-white/[0.02] overflow-hidden transition-all duration-300">
+                <summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer text-[10px] font-bold tracking-[0.2em] text-on-surface-variant/70 uppercase hover:text-white select-none list-none [&::-webkit-details-marker]:hidden">
+                    <span class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[16px]">settings</span>
+                        ⚙️ FILTROS AVANZADOS
+                    </span>
+                    <span class="material-symbols-outlined text-[16px] group-open:rotate-180 transition-transform">expand_more</span>
+                </summary>
+                <div class="p-4 border-t border-white/5 bg-black/40 space-y-6">
+                    <!-- SPECIFICS -->
+                    <div class="space-y-2">
+                        <p class="text-[9px] font-bold tracking-[0.1em] text-primary uppercase">Detalles (Specifics)</p>
+                        <div class="check-grid select-none">
+                            <label>
+                                <input type="checkbox" name="profileSpecifics" value="specificsBigAss" class="accent-primary rounded">
+                                <span>Big Ass</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileSpecifics" value="specificsBigTits" class="accent-primary rounded">
+                                <span>Big Tits</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileSpecifics" value="specificsTattoos" class="accent-primary rounded">
+                                <span>Tattoos</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileSpecifics" value="specificsHairy" class="accent-primary rounded">
+                                <span>Hairy</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileSpecifics" value="specificsPiercing" class="accent-primary rounded">
+                                <span>Piercing</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileSpecifics" value="specificLesbians" class="accent-primary rounded">
+                                <span>Lesbians</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- HAIR / EYES COLOR -->
+                    <div class="space-y-2">
+                        <p class="text-[9px] font-bold tracking-[0.1em] text-primary uppercase">Pelo / Ojos</p>
+                        <div class="check-grid select-none">
+                            <label>
+                                <input type="checkbox" name="profileHairColor" value="hairColorBlonde" class="accent-primary rounded">
+                                <span>Rubio</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileHairColor" value="hairColorRed" class="accent-primary rounded">
+                                <span>Rojo</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileHairColor" value="hairColorBlack" class="accent-primary rounded">
+                                <span>Negro</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileEyesColor" value="eyeColorBlue" class="accent-primary rounded">
+                                <span>Azules</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileEyesColor" value="eyeColorGreen" class="accent-primary rounded">
+                                <span>Verdes</span>
+                            </label>
+                            <label>
+                                <input type="checkbox" name="profileEyesColor" value="eyeColorBrown" class="accent-primary rounded">
+                                <span>Marrones</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Premium Sponsor Badge in Sidebar -->
+            <div class="space-y-3 bg-red-950/20 border border-primary/20 rounded-2xl p-4 transition-all hover:border-primary/50 group">
+                <div class="flex items-center justify-between">
+                    <span class="text-[8px] font-black tracking-[0.2em] text-primary uppercase">SPONSOR ENLACE</span>
+                    <span class="bg-primary/20 text-primary text-[6px] font-black px-1 rounded uppercase tracking-wider">AD</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined notranslate text-xl" translate="no">workspace_premium</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h3 class="text-[11px] font-bold text-white uppercase tracking-wider truncate">REDEX PREMIUM VIP</h3>
+                        <p class="text-[8px] font-medium text-on-surface-variant uppercase opacity-60">Sincronización Directa de Nodos</p>
+                    </div>
+                </div>
+                <a href="https://t.datsk11.com/418922/3788/0?target=banners&po=6456&aff_sub5=SF_006OG000004lmDN" target="_blank" rel="noopener noreferrer" class="block w-full bg-primary hover:bg-red-700 text-white text-center py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">
+                    CONECTAR NODO VIP
+                </a>
+            </div>
+
+            <!-- System Debug Panel -->
+            <div class="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
+                <p class="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase pl-1">⚙️ System Debug</p>
+                <div class="space-y-1">
+                    <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Constructed API Target</span>
+                    <input type="text" id="debugUrl" readonly class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[10px] font-mono text-zinc-400 outline-none w-full select-all cursor-pointer" placeholder="NO INSTANCE GENERATED" />
+                </div>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="p-6 mt-4 space-y-3 border-t border-white/5 bg-black/40">
+            <button id="fetchBtn" class="w-full bg-primary hover:brightness-110 active:scale-[0.98] transition-all text-white py-4 rounded-xl flex items-center justify-center gap-3 select-none">
+                <span class="material-symbols-outlined text-[20px]">sync</span>
+                <span class="text-[12px] font-black tracking-widest uppercase">Execute Discovery</span>
+            </button>
+            <button id="resetBtn" class="w-full text-on-surface-variant hover:text-white transition-colors text-[10px] font-bold tracking-[0.3em] uppercase py-2 select-none">
+                Clear Intel
+            </button>
+        </div>
+    </aside>
+
+    <div id="drawerBackdrop" class="fixed inset-0 bg-black/60 z-[55] hidden"></div>
+
+    <!-- Main Content Area -->
+    <main class="pt-[90px] min-h-screen bg-black">
+        <!-- Hero Section -->
+        <section id="featuredSection" class="relative w-full h-[600px] lg:h-[700px] overflow-hidden cursor-pointer">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10 opacity-60"></div>
+            <div class="absolute inset-0 bg-black/10 z-0"></div>
+            <video id="featuredVideo" class="absolute inset-0 w-full h-full object-cover opacity-80 transition-all duration-700" muted playsinline></video>
+            
+            <!-- Upper Profile Info with Circular Avatar (Clean, separate layout) -->
+            <div class="absolute top-6 left-6 md:left-margin-lg z-20 flex items-center gap-3 bg-black/60 backdrop-blur-md pl-3 pr-5 py-2 rounded-full border border-white/10 shadow-[0_8px_24px_rgba(0,0,0,0.5)]">
+                <img id="featuredAvatar" src="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png" class="w-10 h-10 md:w-11 md:h-11 rounded-full object-cover border-2 border-primary shadow-[0_0_10px_rgba(255,0,0,0.4)] transition-all duration-300" alt="Avatar">
+                <div class="flex flex-col">
+                    <span class="text-[8px] md:text-[9px] font-black text-primary tracking-wider uppercase">VIVO EN REDEX</span>
+                    <h1 id="featuredName" class="text-xs md:text-sm font-black uppercase tracking-wider text-white font-sans leading-none truncate max-w-[120px] sm:max-w-[180px] md:max-w-none">---</h1>
+                </div>
+            </div>
+
+            <!-- Beautiful Floating Audio Control (Top Right - completely separate, icon only) -->
+            <div class="absolute top-6 right-6 md:right-margin-lg z-20">
+                <button id="featuredVolumeBtn" class="w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center bg-black/60 backdrop-blur-md border border-white/15 hover:border-primary/50 hover:bg-primary/10 active:scale-95 transition-all duration-300 cursor-pointer select-none shadow-[0_4px_12px_rgba(0,0,0,0.5)]" title="Activar/Desactivar Audio">
+                    <span class="material-symbols-outlined text-[18px] md:text-[20px] text-white/70 transition-colors duration-300" id="featuredVolumeIcon">volume_off</span>
+                </button>
+            </div>
+
+            <!-- Dynamic Hero Play Button / Unlock Overlay -->
+            <button id="heroPlayBtn" class="hidden absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary/95 hover:bg-primary hover:scale-110 active:scale-95 text-white w-20 h-20 rounded-full flex items-center justify-center shadow-[0_0_35px_rgba(255,0,0,0.6)] transition-all duration-300 z-40 animate-bounce-subtle">
+                <span class="material-symbols-outlined text-[48px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+            </button>
+
+            <!-- Neon Countdown Progress Bar -->
+            <div id="heroCountdownContainer" class="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30 overflow-hidden hidden">
+                <div id="heroCountdownBar" class="h-full bg-primary shadow-[0_0_15px_rgba(255,0,0,0.8)]" style="width: 100%; transition: width 6000ms linear;"></div>
+            </div>
+        </section>
+
+        <!-- Main Grid -->
+        <section class="px-4 md:px-margin-lg py-margin-md max-w-[1440px] mx-auto">
+
+
+            <div id="modelsGrid" class="grid grid-cols-3 gap-2 sm:gap-4 md:gap-8 pb-4 md:pb-0">
+                <!-- Cards injected here -->
+            </div>
+            
+            <!-- Pagination -->
+            <div id="paginationContainer" class="mt-16 flex flex-col items-center gap-6 pb-16 hidden">
+                <div id="pageNumbers" class="flex flex-wrap justify-center gap-1.5 sm:gap-2 max-w-full px-4"></div>
+                <div id="paginationStats" class="text-[10px] font-bold text-white/50 uppercase tracking-widest"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Floating Cyber Marquee Ad Bar -->
+    <div id="cyberMarqueeBar" class="fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-md border-t border-primary/30 py-2.5 px-4 flex items-center justify-between transition-all duration-500 shadow-[0_-10px_30px_rgba(239,68,68,0.15)]">
+        <div class="flex items-center gap-3 overflow-hidden flex-1 cursor-pointer" id="marqueeClickArea">
+            <span class="flex h-2 w-2 relative shrink-0">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+            </span>
+            <span class="bg-primary/20 border border-primary/40 text-primary text-[8px] font-black px-1.5 py-0.5 rounded uppercase tracking-wider shrink-0">REDEX</span>
+            
+            <div class="w-full overflow-hidden relative flex">
+                <div id="tickerText" class="animate-marquee whitespace-nowrap text-[9px] sm:text-[11px] font-bold font-mono tracking-wider text-white uppercase pr-4">
+                    ⚡ ¡RESTRICCIONES ELIMINADAS CON REDEX! • TRANSMISIONES HD ULTRA FLUIDAS SIN LÍMITES • HAGA CLIC AQUÍ PARA ACCEDER AL SERVIDOR PREMIUM CON 50% DE DESCUENTO DIRECTO • ACCESO DIRECTO INMEDIATO SIN ESPERAS • ⚡ ¡RESTRICCIONES ELIMINADAS CON REDEX! • TRANSMISIONES HD ULTRA FLUIDAS SIN LÍMITES • HAGA CLIC AQUÍ PARA ACCEDER AL SERVIDOR PREMIUM CON 50% DE DESCUENTO DIRECTO • ACCESO DIRECTO INMEDIATO SIN ESPERAS •
+                </div>
+            </div>
+        </div>
+        <button id="closeMarqueeBtn" class="ml-4 p-1 rounded-full text-zinc-500 hover:text-white hover:bg-white/10 transition-all cursor-pointer shrink-0 animate-pulse" title="Dismiss Alert">
+            <span class="material-symbols-outlined notranslate text-[16px] block" translate="no">close</span>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w-full py-8 bg-[#000000] border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-margin-lg flex flex-col sm:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <img alt="Redex Logo" class="h-7 w-auto object-contain" src="https://i.ibb.co/Pv8MgvCJ/1000191175-removebg-preview.png"/>
+                <span class="text-lg font-black italic tracking-tighter text-white uppercase leading-none">REDEX</span>
+                <span class="text-[8px] font-bold text-zinc-600 uppercase tracking-[0.2em] border-l border-white/10 pl-3">© 2026</span>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6">
+                <a class="text-[8px] font-black text-zinc-500 hover:text-primary transition-all uppercase tracking-[0.2em]" href="#">Política de Privacidad</a>
+                <a class="text-[8px] font-black text-zinc-500 hover:text-primary transition-all uppercase tracking-[0.2em]" href="#">Términos de Servicio</a>
+                <a class="text-[8px] font-black text-zinc-500 hover:text-primary transition-all uppercase tracking-[0.2em]" href="#">Cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // State Management
+        const state = {
+            allModels: [],
+            filteredModels: [],
+            pageSize: 15,
+            currentPage: 1,
+            loading: false,
+            hlsInstances: new Map(),
+            featuredRotationInterval: null,
+            audioEnabled: false,
+            heroTimer: null,
+            isHeroBlurred: false
+        };
+
+        // Dynamic ad URL builder for premium performance & conversion tracking
+        function getDynamicAdUrl(username, country = 'global') {
+            const baseUrl = "https://t.datsk11.com/418922/3788/0?target=banners&po=6456";
+            const sub5 = "SF_006OG000004lmDN";
+            const sub4 = "AT_0019";
+            
+            const cleanUser = encodeURIComponent(username || 'anonymous');
+            const cleanCountry = encodeURIComponent(country || 'global');
+            const systemId = encodeURIComponent(document.getElementById('userIdInput')?.value || 'REDEX-SYS-01');
+            
+            return `${baseUrl}&aff_sub5=${sub5}&aff_sub4=${sub4}&aff_sub1=${cleanUser}&aff_sub2=${cleanCountry}&aff_sub3=${systemId}`;
+        }
+
+        const ELEMENTS = {
+            modelsGrid: document.getElementById('modelsGrid'),
+            fetchBtn: document.getElementById('fetchBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            toastContainer: document.getElementById('toastContainer'),
+            mobileMenuBtn: document.getElementById('mobileMenuBtn'),
+            closeDrawerBtn: document.getElementById('closeDrawerBtn'),
+            mobileDrawer: document.getElementById('mobileDrawer'),
+            drawerBackdrop: document.getElementById('drawerBackdrop'),
+            sidebarSearch: document.getElementById('sidebarSearch'),
+            intelSearch: document.getElementById('intelSearch'),
+            paginationContainer: document.getElementById('paginationContainer'),
+            pageNumbers: document.getElementById('pageNumbers'),
+            paginationStats: document.getElementById('paginationStats'),
+            featuredSection: document.getElementById('featuredSection'),
+            featuredVideo: document.getElementById('featuredVideo'),
+            featuredName: document.getElementById('featuredName'),
+            featuredAvatar: document.getElementById('featuredAvatar'),
+            featuredViewers: document.getElementById('featuredViewers'),
+            featuredCountry: document.getElementById('featuredCountry'),
+            discoverFeedBtn: document.getElementById('discoverFeedBtn'),
+            languageBtn: document.getElementById('languageBtn'),
+            featuredVolumeBtn: document.getElementById('featuredVolumeBtn'),
+            featuredVolumeIcon: document.getElementById('featuredVolumeIcon'),
+            featuredVolumeText: document.getElementById('featuredVolumeText')
+        };
+
+        const FILTERS = [
+            'userIdInput', 'tagInput', 'limitInput', 'strictSelect', 'modelsListInput', 'excludeModelsListInput',
+            'profileInterestedIn', 'profileBodyType', 'profileEthnicity', 'profileSubculture',
+            'modelsLanguageInput', 'modelsCountryInput'
+        ];
+
+        // Core Intelligence Algorithm
+        function calculatePowerScore(model) {
+            let score = 0;
+            score += (model.viewersCount || 0) * 0.4;
+            score += (model.favoritesCount || 0) * 0.2;
+            if (model.broadcastHD) score += 50;
+            if (model.isNew) score += 30;
+            return Math.min(score, 100);
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.createElement('div');
+            let color = 'border-white/10 bg-zinc-900 text-zinc-400';
+            if (type === 'success') {
+                color = 'border-primary/20 bg-primary/10 text-primary';
+            } else if (type === 'error') {
+                color = 'border-red-500/20 bg-red-500/10 text-red-500';
+            }
+            toast.className = `px-6 py-4 rounded-xl border ${color} backdrop-blur-2xl shadow-2xl text-[10px] font-black uppercase tracking-[0.15em] flex items-center gap-4 animate-card`;
+            toast.innerHTML = `<div class="w-1.5 h-1.5 rounded-full ${type === 'success' ? 'bg-primary' : (type === 'error' ? 'bg-red-500' : 'bg-zinc-600')} animate-pulse"></div>${msg}`;
+            ELEMENTS.toastContainer.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-4');
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        function obtenerFiltros() {
+            const params = {};
+
+            // --- USER ID ---
+            const userId = document.getElementById('userIdInput')?.value.trim(); 
+            if (userId) {
+                params.userId = userId;
+            } else {
+                showToast('⚠️ Introduce tu User ID', 'error');
+            }
+
+            // --- STREAM CONFIG ---
+            const limit = document.getElementById('limitInput')?.value;
+            if (limit && limit > 0) params.limit = limit;
+
+            const strict = document.getElementById('strictSelect')?.value;
+            if (strict !== undefined && strict !== '') params.strict = strict;
+
+            // Textos de STREAM CONFIG
+            const textIds = ['modelsList', 'excludeModelsList', 'tag', 'modelsLanguage', 'modelsCountry'];
+            textIds.forEach(id => {
+                const el = document.getElementById(id + 'Input');
+                if (el && el.value.trim()) params[id] = el.value.trim();
+            });
+
+            // --- HUMAN INTEL (Selects) ---
+            const selects = ['profileInterestedIn', 'profileBodyType', 'profileEthnicity', 'profileSubculture'];
+            selects.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.value) params[id] = el.value;
+            });
+
+            // --- PRECISION QUALITY (Checkboxes booleanos) ---
+            const booleans = ['isNew', 'broadcastHD', 'broadcastVR', 'broadcastMobile', 
+                              'goalEnabled', 'mlBoost', 'isMlAnal', 'isMlBlowjob'];
+            booleans.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.checked) params[id] = '1';
+            });
+
+            // --- MULTISELECTORES (Avanzados) ---
+            const multiGroups = ['profileSpecifics', 'profileHairColor', 'profileEyesColor'];
+            multiGroups.forEach(groupName => {
+                const checkboxes = document.querySelectorAll(`input[name="${groupName}"]:checked`);
+                if (checkboxes.length > 0) {
+                    params[groupName] = Array.from(checkboxes).map(cb => cb.value).join(',');
+                }
+            });
+
+            return params;
+        }
+
+        // --- CONSTRUCTOR DE URL (Úsalo en tu fetch) ---
+        function construirUrl(baseUrl = 'https://go.whitetrafsa.com/api/models') {
+            const filtros = obtenerFiltros();
+            if (!filtros.userId) return null;
+
+            const queryParams = Object.keys(filtros)
+                .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(filtros[key])}`)
+                .join('&');
+
+            const urlCompleta = `${baseUrl}?${queryParams}`;
+            
+            // Si tienes un input de depuración, actualízalo
+            const debugInput = document.getElementById('debugUrl');
+            if (debugInput) debugInput.value = urlCompleta;
+
+            return urlCompleta;
+        }
+
+        function renderModels() {
+            ELEMENTS.modelsGrid.innerHTML = '';
+            const query = (ELEMENTS.sidebarSearch.value || ELEMENTS.intelSearch.value || '').toLowerCase();
+            
+            state.filteredModels = state.allModels.filter(m => {
+                const name = (m.displayName || m.username || '').toLowerCase();
+                const country = (m.modelsCountry || '').toLowerCase();
+                return name.includes(query) || country.includes(query);
+            });
+
+            const modelsPerPage = state.pageSize - 1; // 11 models
+            const start = (state.currentPage - 1) * modelsPerPage;
+            const end = start + modelsPerPage;
+            const currentSlice = state.filteredModels.slice(start, end);
+
+            if (currentSlice.length === 0) {
+                ELEMENTS.modelsGrid.innerHTML = `<div class="col-span-full py-20 text-center opacity-40 uppercase tracking-widest font-bold">No nodes matching search signal</div>`;
+                ELEMENTS.paginationContainer.classList.add('hidden');
+                return;
+            }
+
+            const fragment = document.createDocumentFragment();
+            let sponsorInserted = false;
+
+            const createSponsorCard = () => {
+                const sponsorCard = document.createElement('div');
+                sponsorCard.className = 'glass-card overflow-hidden group animate-card w-full cursor-pointer border border-primary/20 hover:border-primary/50 transition-all';
+                sponsorCard.style.animationDelay = '0.2s';
+                
+                // Get models from state to use actual API images
+                const apiModels = state.filteredModels.length > 0 ? state.filteredModels : state.allModels;
+                // Choose a random model to act as the sponsor model
+                let sponsorModel = null;
+                if (apiModels.length > 0) {
+                    sponsorModel = apiModels[Math.floor(Math.random() * apiModels.length)];
+                }
+                
+                let bgImage = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600";
+                let modelName = "CONEXIÓN PREMIUM VIP HD";
+                let modelUser = "sponsor";
+                let country = "global";
+                let viewersText = "15,420 ESPECTADORES";
+                
+                if (sponsorModel) {
+                    bgImage = sponsorModel.previewUrl || sponsorModel.previewUrlThumbBig || sponsorModel.avatarUrl || bgImage;
+                    modelName = (sponsorModel.displayName || sponsorModel.username).toUpperCase();
+                    modelUser = sponsorModel.username;
+                    country = sponsorModel.modelsCountry || 'GLOBAL';
+                    viewersText = `${(sponsorModel.viewersCount || 14820).toLocaleString()} ESPECTADORES`;
+                }
+                
+                sponsorCard.innerHTML = `
+                    <div class="relative aspect-[4/5] w-full transition-all bg-[#0a0a0a]">
+                        <img class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105" src="${bgImage}" loading="lazy">
+                        
+                        <div class="absolute top-1 left-1 sm:top-4 sm:left-4 flex gap-1 sm:gap-2 z-10">
+                            <div class="glass-chip px-1.5 py-0.5 sm:px-3 sm:py-1 flex items-center gap-1 text-[7px] sm:text-[10px] font-bold text-primary uppercase border border-primary/30 bg-black/60 backdrop-blur-sm animate-pulse">
+                                <span class="material-symbols-outlined notranslate text-[9px] sm:text-[12px]" translate="no">workspace_premium</span> 
+                                RECOMENDADO
+                            </div>
+                        </div>
+                        <div class="absolute top-1 right-1 sm:top-4 sm:right-4 z-10">
+                            <div class="bg-primary px-1.5 py-0.5 sm:px-3 sm:py-1 rounded-md sm:rounded-xl text-[7px] sm:text-[10px] font-bold text-on-primary flex items-center gap-0.5 sm:gap-1">
+                                <span class="material-symbols-outlined notranslate text-[9px] sm:text-[12px]" translate="no">workspace_premium</span> ELITE
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                        
+                        <!-- Premium Action Indicator -->
+                        <div class="absolute inset-0 flex flex-col justify-center items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/60 backdrop-blur-sm z-20 p-4 text-center">
+                            <span class="material-symbols-outlined text-[36px] text-primary mb-2 animate-bounce">bolt</span>
+                            <span class="text-[10px] font-black tracking-widest text-white uppercase leading-normal">ACCEDER A LA TRANSMISIÓN PREMIUM VIP</span>
+                            <span class="text-[7px] text-primary font-bold uppercase tracking-wider mt-2 bg-primary/10 px-2 py-1 rounded border border-primary/20">ENTRAR DIRECTO</span>
+                        </div>
+
+                        <div class="absolute bottom-1 left-1 sm:bottom-4 sm:left-4 glass-chip px-1 py-0.5 sm:px-2 sm:py-1 flex items-center gap-1 border border-white/5 z-10 bg-black/40 backdrop-blur-sm">
+                            <span class="active-dot bg-primary"></span>
+                            <span class="text-[7px] sm:text-[10px] font-bold text-on-surface-variant">${viewersText}</span>
+                        </div>
+                    </div>
+                    <div class="p-2 sm:p-5 flex justify-between items-end bg-[#0a0a0a] border-t border-white/5 relative z-10">
+                        <div class="min-w-0 flex-1">
+                            <h4 class="text-[9px] sm:text-[16px] font-headline-md font-bold uppercase tracking-tight text-white mb-0.5 sm:mb-1 truncate pr-1">${modelName}</h4>
+                            <p class="text-[7px] sm:text-[10px] font-medium text-on-surface-variant uppercase opacity-60 truncate">Sponsor: REDEX Premium</p>
+                        </div>
+                        <div class="border border-primary px-1 py-0.5 sm:px-2 sm:py-1 rounded sm:rounded-lg text-[7px] sm:text-[10px] font-bold text-primary uppercase leading-none shrink-0">4K ULTRA</div>
+                    </div>
+                `;
+                sponsorCard.onclick = (e) => {
+                    e.stopPropagation();
+                    window.open(getDynamicAdUrl(modelUser, country), '_blank');
+                    window.location.href = `https://stripchat.com/${modelUser}`;
+                };
+                return sponsorCard;
+            };
+
+            currentSlice.forEach((model, idx) => {
+                // If we hit index 5, insert the sponsor card first to complete row 2 beautifully
+                if (idx === 5) {
+                    fragment.appendChild(createSponsorCard());
+                    sponsorInserted = true;
+                }
+
+                const username = model.username;
+                const avatar = model.previewUrl || model.previewUrlThumbBig || model.avatarUrl || `https://ui-avatars.com/api/?name=${username}&background=0a0a0a&color=ff0000`;
+                const hlsUrl = model.stream && model.stream.urls ? (model.stream.urls['240p'] || model.stream.urls['original']) : '';
+                const viewers = model.viewersCount || 0;
+                const powerScore = calculatePowerScore(model).toFixed(0);
+
+                const card = document.createElement('div');
+                card.className = 'glass-card overflow-hidden group animate-card w-full cursor-pointer';
+                card.style.animationDelay = `${idx * 0.05}s`;
+                card.dataset.hls = hlsUrl;
+                card.dataset.username = username;
+                
+                card.innerHTML = `
+                    <div class="relative aspect-[4/5] w-full transition-all bg-[#0a0a0a]">
+                        <img class="w-full h-full object-cover transition-opacity duration-500 group-hover:opacity-10" src="${avatar}" loading="lazy">
+                        
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 overflow-hidden">
+                            <video id="video-${username}" class="w-full h-full object-cover" muted playsinline></video>
+                            <div class="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-red-600/90 text-white font-black text-[6px] sm:text-[9px] tracking-widest px-1.5 py-0.5 rounded flex items-center gap-1 z-20">
+                                <span class="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
+                                ACTIVE LIVE
+                            </div>
+                        </div>
+
+                        <div class="absolute top-1 left-1 sm:top-4 sm:left-4 flex gap-1 sm:gap-2">
+                            <div class="glass-chip px-1.5 py-0.5 sm:px-3 sm:py-1 flex items-center gap-1 sm:gap-2 text-[7px] sm:text-[10px] font-bold text-on-surface uppercase border border-white/10">
+                                <span class="material-symbols-outlined notranslate text-[9px] sm:text-[12px] text-primary" style="font-variation-settings: 'FILL' 1;" translate="no">location_on</span> 
+                                ${model.modelsCountry ? model.modelsCountry.toUpperCase() : 'GLOB'}
+                            </div>
+                        </div>
+                        <div class="absolute top-1 right-1 sm:top-4 sm:right-4">
+                            <div class="bg-primary px-1.5 py-0.5 sm:px-3 sm:py-1 rounded-md sm:rounded-xl text-[7px] sm:text-[10px] font-bold text-on-primary flex items-center gap-0.5 sm:gap-1">
+                                <span class="material-symbols-outlined notranslate text-[9px] sm:text-[12px]" translate="no">add</span> ${powerScore}
+                            </div>
+                        </div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80"></div>
+                        <div class="absolute bottom-1 left-1 sm:bottom-4 sm:left-4 glass-chip px-1 py-0.5 sm:px-2 sm:py-1 flex items-center gap-1 border border-white/5">
+                            <span class="active-dot"></span>
+                            <span class="text-[7px] sm:text-[10px] font-bold text-on-surface-variant">${viewers.toLocaleString()}</span>
+                        </div>
+                    </div>
+                    <div class="p-2 sm:p-5 flex justify-between items-end bg-[#0a0a0a] border-t border-white/5">
+                        <div class="min-w-0 flex-1">
+                            <h4 class="text-[9px] sm:text-[16px] font-headline-md font-bold uppercase tracking-tight text-white mb-0.5 sm:mb-1 truncate pr-1">${model.displayName || username}</h4>
+                            <p class="text-[7px] sm:text-[10px] font-medium text-on-surface-variant uppercase opacity-60 truncate">@${username}</p>
+                        </div>
+                        ${model.broadcastHD ? '<div class="border border-primary px-1 py-0.5 sm:px-2 sm:py-1 rounded sm:rounded-lg text-[7px] sm:text-[10px] font-bold text-primary uppercase leading-none shrink-0">4K</div>' : ''}
+                    </div>
+                `;
+                
+                card.onclick = () => loadCardToHero(model);
+                card.addEventListener('mouseenter', () => {
+                    if (window.innerWidth >= 768) {
+                        startNexusVision(card);
+                    }
+                });
+                card.addEventListener('mouseleave', () => {
+                    if (window.innerWidth >= 768) {
+                        stopNexusVision(card);
+                    }
+                });
+                fragment.appendChild(card);
+            });
+
+            // If we have fewer than 6 models and sponsor wasn't inserted, append at the end
+            if (!sponsorInserted && currentSlice.length > 0) {
+                fragment.appendChild(createSponsorCard());
+            }
+
+            ELEMENTS.modelsGrid.appendChild(fragment);
+            updatePaginationControls();
+        }
+
+        function updatePaginationControls() {
+            const modelsPerPage = state.pageSize - 1; // 11
+            const totalPages = Math.ceil(state.filteredModels.length / modelsPerPage);
+            ELEMENTS.paginationContainer.classList.toggle('hidden', totalPages <= 1);
+            ELEMENTS.pageNumbers.innerHTML = '';
+            
+            const startIdx = (state.currentPage - 1) * modelsPerPage + 1;
+            const endIdx = Math.min(state.currentPage * modelsPerPage, state.filteredModels.length);
+            ELEMENTS.paginationStats.innerText = `MOSTRANDO ${startIdx}-${endIdx} DE ${state.filteredModels.length} NODOS`;
+
+            if (totalPages <= 1) return;
+
+            // Helper function to create page button with robust design
+            function createPageButton(page, text, isActive = false, isDisabled = false) {
+                const btn = document.createElement('button');
+                btn.className = `min-w-[36px] h-9 px-2.5 rounded-lg text-[10px] font-black tracking-wider uppercase flex items-center justify-center transition-all cursor-pointer ${
+                    isActive 
+                        ? 'bg-primary text-white shadow-[0_0_12px_rgba(255,0,0,0.4)] border border-primary' 
+                        : isDisabled 
+                            ? 'bg-white/2 text-white/20 cursor-not-allowed border border-transparent opacity-40' 
+                            : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white border border-white/5 hover:border-white/10 active:scale-95'
+                }`;
+                btn.innerText = text;
+                
+                if (!isDisabled) {
+                    btn.onclick = (e) => {
+                        e.stopPropagation();
+                        state.currentPage = page;
+                        renderModels();
+                        
+                        // Scroll back to models grid cleanly
+                        const modelsGrid = document.getElementById('modelsGrid');
+                        if (modelsGrid) {
+                            modelsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        } else {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }
+                    };
+                }
+                return btn;
+            }
+
+            // Previous Button
+            const prevBtn = createPageButton(state.currentPage - 1, '‹', false, state.currentPage === 1);
+            ELEMENTS.pageNumbers.appendChild(prevBtn);
+
+            // Determine page range to show with sliding window
+            let pages = [];
+            if (totalPages <= 7) {
+                for (let i = 1; i <= totalPages; i++) {
+                    pages.push(i);
+                }
+            } else {
+                pages.push(1);
+
+                if (state.currentPage <= 4) {
+                    pages.push(2, 3, 4, 5);
+                    pages.push('...');
+                    pages.push(totalPages);
+                } else if (state.currentPage >= totalPages - 3) {
+                    pages.push('...');
+                    pages.push(totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1);
+                    pages.push(totalPages);
+                } else {
+                    pages.push('...');
+                    pages.push(state.currentPage - 1, state.currentPage, state.currentPage + 1);
+                    pages.push('...');
+                    pages.push(totalPages);
+                }
+            }
+
+            // Render each item
+            pages.forEach(p => {
+                if (p === '...') {
+                    const span = document.createElement('span');
+                    span.className = 'min-w-[36px] h-9 flex items-center justify-center text-white/30 text-[10px] font-bold select-none';
+                    span.innerText = '...';
+                    ELEMENTS.pageNumbers.appendChild(span);
+                } else {
+                    const btn = createPageButton(p, String(p), p === state.currentPage);
+                    ELEMENTS.pageNumbers.appendChild(btn);
+                }
+            });
+
+            // Next Button
+            const nextBtn = createPageButton(state.currentPage + 1, '›', false, state.currentPage === totalPages);
+            ELEMENTS.pageNumbers.appendChild(nextBtn);
+        }
+
+        async function executeDiscovery() {
+            if (state.loading) return;
+            state.loading = true;
+            ELEMENTS.fetchBtn.disabled = true;
+
+            const fullUrl = construirUrl();
+            if (!fullUrl) {
+                state.loading = false;
+                ELEMENTS.fetchBtn.disabled = false;
+                return;
+            }
+
+            try {
+                // Route query parameters through our local proxy endpoint
+                const urlObj = new URL(fullUrl);
+                let response;
+                let data;
+                let usedFallback = false;
+
+                try {
+                    console.log(`[REDEX Indexer] Synchronizing via Local Secure Proxy: /api/models${urlObj.search}`);
+                    response = await fetch(`/api/models${urlObj.search}`);
+                    
+                    if (!response.ok) {
+                        let errorText = "";
+                        try {
+                            const errJson = await response.json();
+                            errorText = errJson.details || errJson.error || response.statusText;
+                        } catch (e) {
+                            const rawText = await response.text();
+                            errorText = rawText.length > 120 ? rawText.substring(0, 120) + "..." : rawText;
+                        }
+                        throw new Error(`HTTP ${response.status}: ${errorText || 'Proxy Error'}`);
+                    }
+                    data = await response.json();
+                } catch (proxyError) {
+                    console.log("[REDEX Indexer - Proxy Failed/Blocked] Initiating high-fidelity direct browser-to-API fallback. Reason:", proxyError);
+                    
+                    // Direct browser-to-API fallback (CORS is fully enabled on the target feed and allows direct browser fetch perfectly)
+                    const directUrl = `https://go.whitetrafsa.com/api/models${urlObj.search}`;
+                    response = await fetch(directUrl);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Direct API HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    data = await response.json();
+                    usedFallback = true;
+                    console.log("[REDEX Indexer] Direct browser-to-API fallback succeeded!");
+                }
+                
+                state.allModels = Array.isArray(data) ? data : (data.models || []);
+                state.currentPage = 1;
+                
+                if (state.allModels.length > 0) {
+                    renderFeatured(state.allModels[0]);
+                    startFeaturedRotation();
+                }
+
+                renderModels();
+                if (usedFallback) {
+                    showToast(`Success: Direct Intel Link established (${state.allModels.length} Targets)`);
+                } else {
+                    showToast(`Success: Indexing ${state.allModels.length} Targets`);
+                }
+                closeDrawer();
+            } catch (error) {
+                console.log("[Discovery Error]", error);
+                showToast(`Intel Link Interrupted: ${error.message}`, 'error');
+            } finally {
+                state.loading = false;
+                ELEMENTS.fetchBtn.disabled = false;
+            }
+        }
+
+        function startNexusVision(card) {
+            const hlsUrl = card.dataset.hls;
+            const username = card.dataset.username;
+            const video = document.getElementById(`video-${username}`);
+            if (!hlsUrl || !video) return;
+
+            if (Hls.isSupported()) {
+                const hls = new Hls({ capLevelToPlayerSize: true, autoStartLoad: true });
+                hls.loadSource(hlsUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.muted = !state.audioEnabled;
+                    video.play().catch(() => {});
+                });
+                state.hlsInstances.set(username, hls);
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = hlsUrl;
+                video.muted = !state.audioEnabled;
+                video.addEventListener('loadedmetadata', () => {
+                    video.play().catch(() => {});
+                });
+            }
+        }
+
+        function stopNexusVision(card) {
+            const username = card.dataset.username;
+            const video = document.getElementById(`video-${username}`);
+            const hls = state.hlsInstances.get(username);
+            if (hls) {
+                hls.destroy();
+                state.hlsInstances.delete(username);
+            }
+            if (video) {
+                video.pause();
+                video.src = '';
+                video.load();
+            }
+        }
+
+        function renderFeatured(model) {
+            if (!model) return;
+            ELEMENTS.featuredSection.dataset.username = model.username;
+            ELEMENTS.featuredSection.dataset.country = model.modelsCountry || 'GLOBAL';
+            ELEMENTS.featuredName.innerText = (model.displayName || model.username).toUpperCase();
+            
+            const avatarUrl = model.previewUrl || model.previewUrlThumbBig || model.avatarUrl || `https://ui-avatars.com/api/?name=${model.username}&background=0a0a0a&color=ff0000`;
+            if (ELEMENTS.featuredAvatar) {
+                ELEMENTS.featuredAvatar.src = avatarUrl;
+            }
+
+            if (ELEMENTS.featuredViewers) {
+                ELEMENTS.featuredViewers.innerText = (model.viewersCount || 0).toLocaleString();
+            }
+            if (ELEMENTS.featuredCountry) {
+                ELEMENTS.featuredCountry.innerText = (model.modelsCountry || 'GLOBAL').toUpperCase();
+            }
+            
+            // Clean up old PRIME instance safely
+            const oldHls = state.hlsInstances.get('PRIME');
+            if (oldHls) {
+                oldHls.destroy();
+                state.hlsInstances.delete('PRIME');
+            }
+
+            // Reset blur and play button state on loading new model
+            const video = ELEMENTS.featuredVideo;
+            if (video) {
+                video.classList.remove('blur-md', 'hero-blur-deep');
+            }
+            const playBtn = document.getElementById('heroPlayBtn');
+            if (playBtn) {
+                playBtn.classList.add('hidden');
+            }
+            state.isHeroBlurred = false;
+
+            // Reset countdown container visibility
+            const countdownContainer = document.getElementById('heroCountdownContainer');
+            if (countdownContainer) {
+                countdownContainer.classList.add('hidden');
+            }
+
+            const hlsUrl = model.stream && model.stream.urls ? (model.stream.urls['240p'] || model.stream.urls['original']) : '';
+            if (hlsUrl && video) {
+                if (Hls.isSupported()) {
+                    const hls = new Hls({ capLevelToPlayerSize: true, autoStartLoad: true });
+                    hls.loadSource(hlsUrl);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        video.muted = !state.audioEnabled;
+                        video.play().catch(() => {});
+                    });
+                    state.hlsInstances.set('PRIME', hls);
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = hlsUrl;
+                    video.muted = !state.audioEnabled;
+                    video.addEventListener('loadedmetadata', () => {
+                        video.play().catch(() => {});
+                    });
+                }
+            }
+        }
+
+        function loadCardToHero(model) {
+            // If the hero/card is blurred or locked, we should NOT load or reactivate the live.
+            // Instead, trigger the premium redirect/ad immediately and wait for user action.
+            const cardEl = document.querySelector(`.glass-card[data-username="${model.username}"]`);
+            const isCardLocked = cardEl && cardEl.classList.contains('card-locked-active');
+            
+            if (state.isHeroBlurred || isCardLocked) {
+                const country = model.modelsCountry || 'GLOBAL';
+                window.open(getDynamicAdUrl(model.username, country), '_blank');
+                window.location.href = `https://stripchat.com/${model.username}`;
+                showToast(`Redireccionando a la transmisión premium de @${model.username}...`, 'success');
+                return;
+            }
+
+            // Stop automatic rotation so it doesn't interrupt this manually loaded card
+            if (state.featuredRotationInterval) {
+                clearInterval(state.featuredRotationInterval);
+                state.featuredRotationInterval = null;
+            }
+
+            // Clear any existing hero timer
+            if (state.heroTimer) {
+                clearTimeout(state.heroTimer);
+                state.heroTimer = null;
+            }
+
+            // Reset any previously locked and blurred cards in the grid
+            document.querySelectorAll('.glass-card').forEach(c => {
+                c.classList.remove('card-locked-active');
+                const overlay = c.querySelector('.card-locked-overlay');
+                if (overlay) overlay.remove();
+                
+                // Restore original card aspect styling
+                const visual = c.querySelector('.relative.aspect-\\[4\\/5\\]');
+                if (visual) {
+                    visual.style.filter = '';
+                    visual.style.pointerEvents = '';
+                }
+            });
+
+            // Set up high-fidelity Countdown progress bar
+            const bar = document.getElementById('heroCountdownBar');
+            const container = document.getElementById('heroCountdownContainer');
+            if (bar && container) {
+                container.classList.remove('hidden');
+                bar.style.transition = 'none';
+                bar.style.width = '100%';
+                // Force layout reflow
+                bar.getBoundingClientRect();
+                bar.style.transition = 'width 6000ms linear';
+                bar.style.width = '0%';
+            }
+
+            // Render it in the Hero
+            renderFeatured(model);
+
+            // Set timer for 6 seconds
+            state.heroTimer = setTimeout(() => {
+                // Apply blur
+                const video = ELEMENTS.featuredVideo;
+                if (video) {
+                    video.classList.add('hero-blur-deep');
+                }
+                state.isHeroBlurred = true;
+
+                // Hide countdown progress bar container
+                if (container) {
+                    container.classList.add('hidden');
+                }
+
+                // Show play button
+                const playBtn = document.getElementById('heroPlayBtn');
+                if (playBtn) {
+                    playBtn.classList.remove('hidden');
+                }
+
+                // Blur and Lock the SELECTED card in the grid to enforce Play button action
+                const selectedCard = document.querySelector(`.glass-card[data-username="${model.username}"]`);
+                if (selectedCard) {
+                    selectedCard.classList.add('card-locked-active');
+                    
+                    const visual = selectedCard.querySelector('.relative.aspect-\\[4\\/5\\]');
+                    if (visual) {
+                        visual.style.filter = 'blur(24px)'; // Intense 24px blur matching the Hero
+                        visual.style.pointerEvents = 'none';
+                    }
+
+                    // Append STREAM LOCKED overlay
+                    if (!selectedCard.querySelector('.card-locked-overlay')) {
+                        const overlay = document.createElement('div');
+                        overlay.className = 'card-locked-overlay absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300';
+                        overlay.innerHTML = `
+                            <span class="material-symbols-outlined text-[32px] text-primary animate-pulse mb-1" style="font-variation-settings: 'FILL' 1;">lock</span>
+                            <span class="text-[9px] font-black tracking-widest text-primary uppercase">STREAM LOCKED</span>
+                            <span class="text-[6px] text-white/70 uppercase tracking-wider mt-0.5">PLAY TO UNLOCK</span>
+                        `;
+                        selectedCard.appendChild(overlay);
+                    }
+                }
+                
+                showToast('Stream Paused. Tap PLAY to Unlock Live Nexus Feed.', 'info');
+            }, 6000);
+        }
+
+        function startFeaturedRotation() {
+            if (state.featuredRotationInterval) clearInterval(state.featuredRotationInterval);
+            state.featuredRotationInterval = setInterval(() => {
+                if (state.allModels.length > 1) {
+                    const random = state.allModels[Math.floor(Math.random() * Math.min(20, state.allModels.length))];
+                    renderFeatured(random);
+                }
+            }, 15000);
+        }
+
+        // Sidebar Controls
+        function openDrawer() {
+            ELEMENTS.mobileDrawer.classList.remove('hidden', '-translate-x-full');
+            ELEMENTS.mobileDrawer.classList.add('flex');
+            ELEMENTS.drawerBackdrop.classList.remove('hidden');
+        }
+
+        function closeDrawer() {
+            ELEMENTS.mobileDrawer.classList.add('-translate-x-full');
+            setTimeout(() => {
+                ELEMENTS.mobileDrawer.classList.add('hidden');
+                ELEMENTS.drawerBackdrop.classList.add('hidden');
+            }, 300);
+        }
+
+        function toggleAudio() {
+            state.audioEnabled = !state.audioEnabled;
+            
+            // Apply to featured video
+            const video = ELEMENTS.featuredVideo;
+            if (video) {
+                video.muted = !state.audioEnabled;
+            }
+            
+            // Update UI components
+            if (state.audioEnabled) {
+                ELEMENTS.featuredVolumeIcon.innerText = 'volume_up';
+                ELEMENTS.featuredVolumeIcon.className = 'material-symbols-outlined text-[18px] md:text-[20px] text-primary transition-colors duration-300';
+                ELEMENTS.featuredVolumeBtn.className = 'w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center bg-primary/10 border border-primary/50 hover:border-primary active:scale-95 transition-all duration-300 cursor-pointer select-none shadow-[0_4px_12px_rgba(255,0,0,0.2)]';
+                if (ELEMENTS.featuredVolumeText) {
+                    ELEMENTS.featuredVolumeText.innerText = 'CON AUDIO';
+                }
+                showToast('Audio activado', 'info');
+            } else {
+                ELEMENTS.featuredVolumeIcon.innerText = 'volume_off';
+                ELEMENTS.featuredVolumeIcon.className = 'material-symbols-outlined text-[18px] md:text-[20px] text-white/70 transition-colors duration-300';
+                ELEMENTS.featuredVolumeBtn.className = 'w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center bg-black/60 backdrop-blur-md border border-white/15 hover:border-primary/50 hover:bg-primary/10 active:scale-95 transition-all duration-300 cursor-pointer select-none shadow-[0_4px_12px_rgba(0,0,0,0.5)]';
+                if (ELEMENTS.featuredVolumeText) {
+                    ELEMENTS.featuredVolumeText.innerText = 'SIN AUDIO';
+                }
+                showToast('Audio desactivado', 'info');
+            }
+            
+            // Also update currently playing hover videos in cards
+            document.querySelectorAll('video[id^="video-"]').forEach(v => {
+                v.muted = !state.audioEnabled;
+            });
+        }
+
+        ELEMENTS.mobileMenuBtn.onclick = openDrawer;
+        ELEMENTS.closeDrawerBtn.onclick = closeDrawer;
+        ELEMENTS.drawerBackdrop.onclick = closeDrawer;
+        ELEMENTS.fetchBtn.onclick = executeDiscovery;
+        ELEMENTS.languageBtn.onclick = () => showToast('Language Switcher: English/Spanish Optimized');
+        
+        if (ELEMENTS.featuredVolumeBtn) {
+            ELEMENTS.featuredVolumeBtn.onclick = (e) => {
+                e.stopPropagation();
+                toggleAudio();
+            };
+        }
+        
+        ELEMENTS.featuredSection.onclick = () => {
+            const username = ELEMENTS.featuredSection.dataset.username;
+            const country = ELEMENTS.featuredSection.dataset.country || 'GLOBAL';
+            if (username) {
+                // Abre el anuncio dinámico optimizado en una pestaña nueva (permitido por el navegador)
+                window.open(getDynamicAdUrl(username, country), '_blank');
+                // Redirecciona la pestaña actual, un método infalible que evita bloqueos de pop-up
+                window.location.href = `https://stripchat.com/${username}`;
+            }
+        };
+        
+        ELEMENTS.discoverFeedBtn.onclick = () => {
+            ELEMENTS.resetBtn.click();
+            showToast('Synchronizing Global Feed...');
+        };
+        
+        ELEMENTS.sidebarSearch.oninput = () => { state.currentPage = 1; renderModels(); };
+        ELEMENTS.intelSearch.oninput = () => { state.currentPage = 1; renderModels(); };
+        
+        // Setup toggle buttons behavior (checkbox-based)
+        document.querySelectorAll('.chip-toggle input[type="checkbox"]').forEach(input => {
+            input.addEventListener('change', () => {
+                executeDiscovery();
+            });
+        });
+
+        // Sync header and sidebar User ID inputs in real-time
+        const headerUserId = document.getElementById('headerUserIdInput');
+        const userIdInput = document.getElementById('userIdInput');
+        if (headerUserId && userIdInput) {
+            headerUserId.addEventListener('input', () => {
+                userIdInput.value = headerUserId.value;
+            });
+            headerUserId.addEventListener('change', () => {
+                executeDiscovery();
+            });
+            userIdInput.addEventListener('input', () => {
+                headerUserId.value = userIdInput.value;
+            });
+            userIdInput.addEventListener('change', () => {
+                executeDiscovery();
+            });
+        }
+
+        // Auto-Discovery on selector/input change
+        FILTERS.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', () => executeDiscovery());
+        });
+
+        // Advanced multiselectors change events
+        document.querySelectorAll('input[name="profileSpecifics"], input[name="profileHairColor"], input[name="profileEyesColor"]').forEach(cb => {
+            cb.addEventListener('change', () => executeDiscovery());
+        });
+
+        ELEMENTS.resetBtn.onclick = () => {
+            FILTERS.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (id === 'limitInput') el.value = '250';
+                    else if (id === 'tagInput') el.value = 'girls';
+                    else if (id === 'strictSelect') el.value = '0';
+                    else if (id === 'userIdInput') el.value = 'REDEX-SYS-01';
+                    else el.value = '';
+                }
+            });
+
+            if (headerUserId) headerUserId.value = 'REDEX-SYS-01';
+            
+            // Reset Checkboxes & Toggles
+            document.querySelectorAll('.chip-toggle input[type="checkbox"]').forEach(input => {
+                input.checked = input.id === 'broadcastHD'; // Default 4K HD on
+                const changeEvent = new Event('change');
+                input.dispatchEvent(changeEvent);
+            });
+
+            // Reset Multiselector Checkboxes
+            document.querySelectorAll('input[name="profileSpecifics"], input[name="profileHairColor"], input[name="profileEyesColor"]').forEach(input => {
+                input.checked = false;
+            });
+
+            executeDiscovery();
+        };
+
+        // Hero Play Button Interaction
+        const heroPlayBtn = document.getElementById('heroPlayBtn');
+        if (heroPlayBtn) {
+            heroPlayBtn.onclick = (e) => {
+                e.stopPropagation(); // Evitar que abra el link externo
+                const username = ELEMENTS.featuredSection.dataset.username;
+                const country = ELEMENTS.featuredSection.dataset.country || 'GLOBAL';
+                if (username) {
+                    // Abre el anuncio dinámico de forma limpia
+                    window.open(getDynamicAdUrl(username, country), '_blank');
+                    // Redirecciona de forma nativa e infalible
+                    window.location.href = `https://stripchat.com/${username}`;
+                    showToast(`Redirecting to @${username} profile...`, 'success');
+
+                    // Reset blur and hide play button
+                    const video = ELEMENTS.featuredVideo;
+                    if (video) {
+                        video.classList.remove('blur-md', 'hero-blur-deep');
+                    }
+                    state.isHeroBlurred = false;
+                    heroPlayBtn.classList.add('hidden');
+
+                    // Reset any locked cards
+                    document.querySelectorAll('.glass-card').forEach(c => {
+                        c.classList.remove('card-locked-active');
+                        const overlay = c.querySelector('.card-locked-overlay');
+                        if (overlay) overlay.remove();
+                        const visual = c.querySelector('.relative.aspect-\\[4\\/5\\]');
+                        if (visual) {
+                            visual.style.filter = '';
+                            visual.style.pointerEvents = '';
+                        }
+                    });
+
+                    // Resume regular rotation
+                    startFeaturedRotation();
+                } else {
+                    showToast('Streamer profile unavailable.', 'error');
+                }
+            };
+        }
+
+        // Carousel Mobile Controls
+        const carouselPrevBtn = document.getElementById('carouselPrevBtn');
+        const carouselNextBtn = document.getElementById('carouselNextBtn');
+        if (carouselPrevBtn && carouselNextBtn) {
+            carouselPrevBtn.onclick = (e) => {
+                e.stopPropagation();
+                const card = ELEMENTS.modelsGrid.firstElementChild;
+                if (card) {
+                    const scrollAmount = card.offsetWidth * 3;
+                    ELEMENTS.modelsGrid.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                }
+            };
+            carouselNextBtn.onclick = (e) => {
+                e.stopPropagation();
+                const card = ELEMENTS.modelsGrid.firstElementChild;
+                if (card) {
+                    const scrollAmount = card.offsetWidth * 3;
+                    ELEMENTS.modelsGrid.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            };
+        }
+
+        // Active Live on Hover on Desktop & scroll-based Auto-Play on Mobile
+        let scrollTimeout;
+        ELEMENTS.modelsGrid.addEventListener('scroll', () => {
+            if (window.innerWidth >= 768) return; // Only apply carousel scroll autoplay on mobile
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const gridRect = ELEMENTS.modelsGrid.getBoundingClientRect();
+                const gridCenter = gridRect.left + gridRect.width / 2;
+                
+                let closestCard = null;
+                let minDistance = Infinity;
+                
+                ELEMENTS.modelsGrid.querySelectorAll('.glass-card').forEach(card => {
+                    const rect = card.getBoundingClientRect();
+                    const cardCenter = rect.left + rect.width / 2;
+                    const distance = Math.abs(cardCenter - gridCenter);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestCard = card;
+                    }
+                });
+                
+                if (closestCard) {
+                    // Turn off any other playing card video
+                    ELEMENTS.modelsGrid.querySelectorAll('.glass-card').forEach(card => {
+                        if (card !== closestCard) {
+                            stopNexusVision(card);
+                            const img = card.querySelector('img');
+                            if (img) img.style.opacity = '1';
+                            const videoContainer = card.querySelector('video')?.parentElement;
+                            if (videoContainer) videoContainer.style.opacity = '0';
+                        }
+                    });
+                    
+                    // Turn on closest card video
+                    startNexusVision(closestCard);
+                    const img = closestCard.querySelector('img');
+                    if (img) img.style.opacity = '0.1';
+                    const videoContainer = closestCard.querySelector('video')?.parentElement;
+                    if (videoContainer) videoContainer.style.opacity = '100';
+                }
+            }, 150);
+        });
+
+        // Prevent browser translators from breaking Material Symbols icons globally
+        const protectIcons = () => {
+            document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
+                if (!icon.classList.contains('notranslate')) {
+                    icon.classList.add('notranslate');
+                }
+                if (icon.getAttribute('translate') !== 'no') {
+                    icon.setAttribute('translate', 'no');
+                }
+            });
+        };
+        protectIcons();
+        const observer = new MutationObserver(() => protectIcons());
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        // Floating Cyber Marquee Ad Bar Interactions
+        const marqueeClickArea = document.getElementById('marqueeClickArea');
+        const closeMarqueeBtn = document.getElementById('closeMarqueeBtn');
+        const cyberMarqueeBar = document.getElementById('cyberMarqueeBar');
+        
+        if (marqueeClickArea) {
+            marqueeClickArea.onclick = () => {
+                window.open(getDynamicAdUrl('marquee_ticker', 'global'), '_blank');
+            };
+        }
+        
+        if (closeMarqueeBtn && cyberMarqueeBar) {
+            closeMarqueeBtn.onclick = (e) => {
+                e.stopPropagation();
+                cyberMarqueeBar.classList.add('translate-y-full', 'opacity-0');
+                setTimeout(() => {
+                    cyberMarqueeBar.remove();
+                }, 500);
+            };
+        }
+
+        // Dynamic Ticker Analytics Engine - Aligned with MatchIntel Elite
+        function updateDynamicTicker() {
+            const tickerTextEl = document.getElementById('tickerText');
+            if (!tickerTextEl) return;
+            
+            const onlineUsernames = state.allModels.slice(0, 10).map(m => m.username);
+            
+            const telemetryMessages = [
+                `⚡ ¡RESTRICCIONES ELIMINADAS CON REDEX! • TRANSMISIONES HD ULTRA FLUIDAS SIN LÍMITES • HAGA CLIC AQUÍ PARA ACCEDER AL SERVIDOR PREMIUM CON 50% DE DESCUENTO DIRECTO • ACCESO DIRECTO INMEDIATO SIN ESPERAS •`,
+                `⚡ TRANSMISIONES EN VIVO SIN INTERRUPCIONES • HAGA CLIC AQUÍ PARA DESBLOQUEAR EL ACCESO COMPLETO CON 50% DE DESCUENTO DIRECTO EN REDEX •`,
+                `⚡ DISFRUTA DE CALIDAD PREMIUM ULTRA HD • HAGA CLIC AQUÍ PARA ACCEDER AL CONTENIDO COMPLETO SIN CORTES • ACCESO INMEDIATO CON REDEX •`
+            ];
+            
+            if (onlineUsernames.length > 0) {
+                const randomUser = onlineUsernames[Math.floor(Math.random() * onlineUsernames.length)].toUpperCase();
+                telemetryMessages.push(`⚡ TRANSMISIÓN DESTACADA EN REDEX: @${randomUser} ESTÁ EN VIVO • HAGA CLIC AQUÍ PARA CONECTAR AL CANAL PREMIUM DIRECTO • ACCESO HD COMPLETO •`);
+            }
+            
+            const chosenMessage = telemetryMessages[Math.floor(Math.random() * telemetryMessages.length)];
+            tickerTextEl.innerText = `${chosenMessage} ${chosenMessage}`;
+        }
+        
+        // Silent Conversion Funnel (Dynamic micro-target notifications)
+        let currentFunnelIndex = 0;
+        function startSilentConversionFunnel() {
+            setInterval(() => {
+                const promos = [
+                    {
+                        msg: "📊 [REDEX] Gran aumento de espectadores en vivo ahora mismo. Pulsa aquí para entrar directo en HD sin anuncios.",
+                        type: "success"
+                    },
+                    {
+                        msg: "⚡ [OFERTA REDEX] Servidor Premium disponible en tu zona. Haz clic aquí para obtener acceso ilimitado hoy mismo.",
+                        type: "success"
+                    },
+                    {
+                        msg: "🔒 [REDEX VIP] Evita cortes de transmisión. Pulsa aquí para activar tu cuenta premium con 50% de descuento.",
+                        type: "success"
+                    },
+                    {
+                        msg: "📈 [TENDENCIA REDEX] El acceso de alta velocidad te garantiza transmisiones fluidas. Consigue tu descuento directo aquí.",
+                        type: "success"
+                    }
+                ];
+                
+                const currentPromo = promos[currentFunnelIndex];
+                currentFunnelIndex = (currentFunnelIndex + 1) % promos.length;
+                
+                const toast = document.createElement('div');
+                toast.className = `px-6 py-4 rounded-xl border border-primary/20 bg-primary/10 text-primary backdrop-blur-2xl shadow-2xl text-[10px] font-black uppercase tracking-[0.15em] flex items-center justify-between gap-4 animate-card cursor-pointer hover:bg-primary/20 transition-all`;
+                toast.style.zIndex = "999";
+                toast.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+                        <span>${currentPromo.msg}</span>
+                    </div>
+                    <span class="material-symbols-outlined text-[14px] shrink-0 text-primary animate-pulse ml-2">open_in_new</span>
+                `;
+                
+                toast.onclick = (e) => {
+                    e.stopPropagation();
+                    window.open(getDynamicAdUrl('silent_toast', 'global'), '_blank');
+                    toast.remove();
+                };
+                
+                ELEMENTS.toastContainer.appendChild(toast);
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-4');
+                    setTimeout(() => toast.remove(), 500);
+                }, 5500);
+            }, 55000); // Fires every 55 seconds
+        }
+
+        // Initialize Discovery and Microfunnel systems
+        executeDiscovery();
+        setInterval(updateDynamicTicker, 15000);
+        startSilentConversionFunnel();
+    </script>
+</body>
+</html>

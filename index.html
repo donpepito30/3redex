@@ -105,6 +105,16 @@
       }
     </script>
     <style>
+        select {
+            -webkit-appearance: none !important;
+            -moz-appearance: none !important;
+            appearance: none !important;
+            background-image: none !important;
+        }
+        select::-ms-expand {
+            display: none;
+        }
+
         body {
             background-color: #050505;
             color: #ffffff;
@@ -406,13 +416,9 @@
                 </div>
             </div>
 
-            <!-- Right: User ID & Language (All) -->
+            <!-- Right: Language Selector -->
             <div class="flex items-center gap-4 justify-end">
-                <!-- Header User ID Input (Sleek Desktop version) -->
-                <div class="hidden md:flex items-center gap-2 bg-black/40 border border-white/10 rounded-xl px-3 py-1.5 focus-within:border-white/30 transition-all">
-                    <span class="material-symbols-outlined notranslate text-white/50 text-[18px]" translate="no">vpn_key</span>
-                    <input id="headerUserIdInput" class="bg-transparent border-none text-[11px] font-black tracking-widest text-white outline-none w-[120px] placeholder:text-white/20 uppercase" placeholder="USER ID..." type="text" value="REDEX-SYS-01"/>
-                </div>
+                <input id="headerUserIdInput" type="hidden" value="REDEX-SYS-01"/>
                 <button id="languageBtn" class="p-2 text-white hover:bg-white/10 rounded-full transition-all">
                     <span class="material-symbols-outlined notranslate text-3xl" translate="no">language</span>
                 </button>
@@ -452,63 +458,54 @@
         </div>
         <!-- Filter Groups -->
         <div class="px-4 flex-1 space-y-6 overflow-y-auto max-h-[calc(100vh-280px)] custom-scrollbar">
-            <!-- User ID Input -->
-            <div class="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
-                <p class="text-[10px] font-bold tracking-[0.2em] text-primary uppercase pl-1">User Validation</p>
-                <div class="space-y-1">
-                    <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Redex User ID</span>
-                    <div class="relative">
-                        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-[18px]">vpn_key</span>
-                        <input type="text" id="userIdInput" class="bg-black/60 border border-white/5 rounded-xl py-3 pl-12 pr-4 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full uppercase" placeholder="ENTER USER ID" value="REDEX-SYS-01">
-                    </div>
-                </div>
-            </div>
+            <!-- Hidden User ID Input -->
+            <input type="hidden" id="userIdInput" value="REDEX-SYS-01">
 
             <!-- Stream Config -->
             <div class="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
-                <p class="text-[10px] font-bold tracking-[0.2em] text-primary uppercase pl-1">Stream Config</p>
+                <p class="text-[10px] font-bold tracking-[0.2em] text-primary uppercase pl-1">Configuración de Contenido</p>
                 <div class="space-y-3">
-                    <!-- ALL CATEGORIES -> Tag de la API -->
+                    <!-- Categorías -->
                     <div class="space-y-1">
-                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">All Categories (Tag)</span>
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Categorías</span>
                         <input type="text" id="tagInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full placeholder:text-white/20 uppercase" placeholder="GIRLS, TEENS" value="girls">
                     </div>
                     
-                    <!-- LIMIT -> Límite de la API -->
+                    <!-- Límite -->
                     <div class="space-y-1">
-                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Limit</span>
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Límite por Página</span>
                         <input type="number" id="limitInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full uppercase" value="250" min="1" max="1000">
                     </div>
 
-                    <!-- STRICT MODE -->
+                    <!-- Modo Estricto -->
                     <div class="space-y-1">
-                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Strict Mode</span>
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Modo de Filtro</span>
                         <div class="relative">
                             <select id="strictSelect" class="w-full appearance-none bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none cursor-pointer focus:border-primary transition-all uppercase">
-                                <option value="0">OFF (PRIORITY)</option>
-                                <option value="1">ON (EXACT FILTER)</option>
+                                <option value="0">TODAS (PRIORIDAD)</option>
+                                <option value="1">EXACTO (SOLO FILTRO)</option>
                             </select>
                             <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-[18px]">expand_more</span>
                         </div>
                     </div>
 
-                    <!-- Priorizar (modelsList) -->
+                    <!-- Priorizar Modelos -->
                     <div class="space-y-1">
-                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Priorizar (Models List)</span>
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Priorizar Modelos</span>
                         <input type="text" id="modelsListInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full placeholder:text-white/20 uppercase" placeholder="USUARIO1, USUARIO2">
                     </div>
 
-                    <!-- Excluir (excludeModelsList) -->
+                    <!-- Excluir Modelos -->
                     <div class="space-y-1">
-                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Excluir (Exclude List)</span>
+                        <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Excluir Modelos</span>
                         <input type="text" id="excludeModelsListInput" class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[11px] font-bold tracking-widest text-white outline-none focus:border-primary transition-all w-full placeholder:text-white/20 uppercase" placeholder="USUARIO_NO, USUARIO_NO2">
                     </div>
                 </div>
             </div>
 
-            <!-- Human Intel -->
+            <!-- Profile Preferences -->
             <div class="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
-                <p class="text-[10px] font-bold tracking-[0.2em] text-primary uppercase pl-1">Human Intel</p>
+                <p class="text-[10px] font-bold tracking-[0.2em] text-primary uppercase pl-1">Preferencias del Perfil</p>
                 <div class="space-y-3">
                     <!-- INTERESTED -> profileInterestedIn -->
                     <div class="space-y-1">
@@ -738,14 +735,8 @@
                 </a>
             </div>
 
-            <!-- System Debug Panel -->
-            <div class="space-y-3 bg-white/[0.02] border border-white/5 rounded-2xl p-4">
-                <p class="text-[10px] font-bold tracking-[0.2em] text-zinc-500 uppercase pl-1">⚙️ System Debug</p>
-                <div class="space-y-1">
-                    <span class="text-[9px] font-bold tracking-wider text-on-surface-variant/50 uppercase pl-1">Constructed API Target</span>
-                    <input type="text" id="debugUrl" readonly class="bg-black/60 border border-white/5 rounded-xl px-4 py-3 text-[10px] font-mono text-zinc-400 outline-none w-full select-all cursor-pointer" placeholder="NO INSTANCE GENERATED" />
-                </div>
-            </div>
+            <!-- Hidden Debug Input -->
+            <input type="hidden" id="debugUrl" />
         </div>
         <!-- Actions -->
         <div class="p-6 mt-4 space-y-3 border-t border-white/5 bg-black/40">
@@ -1330,15 +1321,11 @@
                 }
 
                 renderModels();
-                if (usedFallback) {
-                    showToast(`Success: Direct Intel Link established (${state.allModels.length} Targets)`);
-                } else {
-                    showToast(`Success: Indexing ${state.allModels.length} Targets`);
-                }
+                showToast(`${state.allModels.length} modelos cargadas exitosamente`);
                 closeDrawer();
             } catch (error) {
                 console.log("[Discovery Error]", error);
-                showToast(`Intel Link Interrupted: ${error.message}`, 'error');
+                showToast('Error al actualizar la lista de modelos', 'error');
             } finally {
                 state.loading = false;
                 ELEMENTS.fetchBtn.disabled = false;

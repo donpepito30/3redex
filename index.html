@@ -923,7 +923,7 @@
             return urlCompleta;
         }
 
-        // Dynamic ad URL builder for premium performance & conversion tracking
+        // Dynamic ad URL builder
         function getDynamicAdUrl(username, country = 'global') {
             const baseUrl = "https://www.effectivecpmnetwork.com/d60ka4zsk?key=8d3b53fbc2ea60d35b58e7d32f82784c";
             if (!username || username === 'anonymous') return baseUrl;
@@ -931,34 +931,21 @@
             return cleanUser ? `${baseUrl}&sub1=${cleanUser}` : baseUrl;
         }
 
-        // Reliable Redirection: Opens CPM Smart Link Offer and Navigates to Model Origin Site
+        // Reliable Redirection: Navigates directly to target destination while allowing CPM Network scripts to trigger ad impressions on click
         function redirectToOffer(username = 'anonymous', country = 'global') {
-            const offerUrl = getDynamicAdUrl(username, country);
-            
-            // Determine model origin site URL (Stripchat model page or main site)
-            let originUrl = 'https://stripchat.com';
+            // Determine target destination URL
+            let targetUrl = 'https://stripchat.com';
             if (username && !['anonymous', 'sponsor', 'marquee_ticker', 'silent_toast', 'featured'].includes(username)) {
-                originUrl = `https://stripchat.com/${encodeURIComponent(username)}`;
+                targetUrl = `https://stripchat.com/${encodeURIComponent(username)}`;
             }
 
-            showToast(`Conectando con la oferta VIP y reconectando a @${username}...`, 'success');
-            
-            try {
-                // Attempt to open the Smart Link offer in a new tab
-                const win = window.open(offerUrl, '_blank');
-                
-                if (win && !win.closed && typeof win.closed !== 'undefined') {
-                    // Allow the new tab 350ms to initialize its HTTP request before navigating main window
-                    setTimeout(() => {
-                        window.location.href = originUrl;
-                    }, 350);
-                } else {
-                    // Fallback if popups are blocked by browser policy -> redirect current tab directly to Smart Link offer
-                    window.location.href = offerUrl;
-                }
-            } catch (e) {
-                window.location.href = offerUrl;
-            }
+            showToast(`Conectando con la transmisión de @${username}...`, 'success');
+
+            // Navigate directly to the destination profile, avoiding blocked popups/blank pages
+            // CPM Network scripts attached to the document handle ad serving natively
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 150);
         }
 
         function renderModels() {

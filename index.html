@@ -8,6 +8,9 @@
     <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
     <link rel="apple-touch-icon" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
     <link rel="apple-touch-icon-precomposed" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
+    <link rel="preconnect" href="https://www.effectivecpmnetwork.com" crossorigin />
+    <link rel="dns-prefetch" href="https://pl30502956.effectivecpmnetwork.com" />
+    <link rel="dns-prefetch" href="https://pl30502957.effectivecpmnetwork.com" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
@@ -309,66 +312,9 @@
             cursor: pointer;
         }
     </style>
-    <!-- 
-        ========================================================================
-        MÓDULO DE PUBLICIDAD / ADVERTISING INTEGRATION MODULE
-        ========================================================================
-        ANÁLISIS DEL CÓDIGO PUBLICITARIO:
-        - Proveedor: Widget de cámaras externas de crxcr2.com (im_jerky).
-        - Parámetros clave:
-          * lang=en: Establece el idioma predeterminado en inglés.
-          * mode=prerecorded: Configura la reproducción de transmisiones en modo pregrabado.
-          * outlinkUrl: Enlace de afiliado de redirección/seguimiento (t.datsk11.com)
-            con identificadores de campaña para atribución (aff_sub4 y aff_sub5).
-        ========================================================================
-    -->
-    <script defer src="https://crxcr2.com/cams-widget-ext/im_jerky?&lang=en&mode=prerecorded&outlinkUrl=https://t.datsk11.com/418922/3788/0?target=banners&po=6456&aff_sub5=SF_006OG000004lmDN&aff_sub4=AT_0018"></script>
-
-    <!-- 
-        ========================================================================
-        MÓDULO DE PUBLICIDAD: POPIN REDIRECCIÓN (AFFSTENTIAL OVERLAY)
-        ========================================================================
-        ANÁLISIS DEL CÓDIGO PUBLICITARIO:
-        - Proveedor: PopIn Affstitial de crxcra.com.
-        - Lógica: Intercepta y redirecciona interacciones mediante un overlay premium.
-        - Configuración:
-          * url: Redirección de afiliado para monetización VIP.
-          * contentType: overlay (capa superpuesta interactiva de pantalla completa).
-          * coverOverlay: true (cobertura total de seguridad).
-          * expireDays: 0.01 (frecuencia óptima de impresión de anuncios).
-        ========================================================================
-    -->
-    <script src="https://crxcra.com/popin/latest/affstitial-min.js"></script>
-    <script>
-        var crakPopInParamsOverlay = {
-            url: 'https://t.datsk11.com/418922/3788/0?target=banners&po=6456&aff_sub5=SF_006OG000004lmDN&aff_sub4=AT_0019',
-            decryptUrl: false,
-            contentType: 'overlay',
-            coverOverlay: true, 
-            expireDays: 0.01
-        };
-    </script>
-
-    <!-- 
-        ========================================================================
-        MÓDULO DE PUBLICIDAD: POPUNDER INTELIGENTE (SCFTP9 MULTI-TAB)
-        ========================================================================
-        ANÁLISIS DEL CÓDIGO PUBLICITARIO:
-        - Proveedor: Sistema Popunder de static.scptp9.com (mnpw3.js).
-        - Lógica: Añade un disparador de nueva pestaña altamente optimizado en clics.
-        - Configuración:
-          * url: Redirección con parámetros de campaña avanzados para atribución premium (aff_sub4=AT_0005).
-          * newTab: true (abre de manera no intrusiva en una nueva pestaña del navegador).
-          * cookieExpires: 86401 (cooldown de 24 horas y 1 segundo para mejorar la experiencia de usuario).
-        ========================================================================
-    -->
-    <script type="text/javascript" src="//static.scptp9.com/mnpw3.js"></script>
-    <script>
-        mnpw.add('https://t.datsk11.com/418922/3788/0?target=banners&po=6456&aff_sub5=SF_006OG000004lmDN&aff_sub4=AT_0005&pud=scptp9', {
-            newTab: true, 
-            cookieExpires: 86401
-        });
-    </script>
+    <!-- Anuncios Monetización / CPM Network - Script 1 & 2 Strategy -->
+    <script async src="https://pl30502956.effectivecpmnetwork.com/5e/6d/d8/5e6dd8adc371da24c61a0f4d1e6d45d1.js"></script>
+    <script async src="https://pl30502957.effectivecpmnetwork.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js"></script>
 </head>
 <body class="custom-scrollbar bg-black overflow-x-hidden font-body-md">
     <div id="toastContainer"></div>
@@ -730,7 +676,7 @@
                         <p class="text-[8px] font-medium text-on-surface-variant uppercase opacity-60">Sincronización Directa de Nodos</p>
                     </div>
                 </div>
-                <a href="https://t.datsk11.com/418922/3788/0?target=banners&po=6456&aff_sub5=SF_006OG000004lmDN" target="_blank" rel="noopener noreferrer" class="block w-full bg-primary hover:bg-red-700 text-white text-center py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">
+                <a href="#" onclick="redirectToOffer('sponsor', 'global'); return false;" class="block w-full bg-primary hover:bg-red-700 text-white text-center py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all">
                     CONECTAR NODO VIP
                 </a>
             </div>
@@ -854,19 +800,6 @@
             isHeroBlurred: false
         };
 
-        // Dynamic ad URL builder for premium performance & conversion tracking
-        function getDynamicAdUrl(username, country = 'global') {
-            const baseUrl = "https://t.datsk11.com/418922/3788/0?target=banners&po=6456";
-            const sub5 = "SF_006OG000004lmDN";
-            const sub4 = "AT_0019";
-            
-            const cleanUser = encodeURIComponent(username || 'anonymous');
-            const cleanCountry = encodeURIComponent(country || 'global');
-            const systemId = encodeURIComponent(document.getElementById('userIdInput')?.value || 'REDEX-SYS-01');
-            
-            return `${baseUrl}&aff_sub5=${sub5}&aff_sub4=${sub4}&aff_sub1=${cleanUser}&aff_sub2=${cleanCountry}&aff_sub3=${systemId}`;
-        }
-
         const ELEMENTS = {
             modelsGrid: document.getElementById('modelsGrid'),
             fetchBtn: document.getElementById('fetchBtn'),
@@ -900,7 +833,6 @@
             'modelsLanguageInput', 'modelsCountryInput'
         ];
 
-        // Core Intelligence Algorithm
         function calculatePowerScore(model) {
             let score = 0;
             score += (model.viewersCount || 0) * 0.4;
@@ -920,7 +852,9 @@
             }
             toast.className = `px-6 py-4 rounded-xl border ${color} backdrop-blur-2xl shadow-2xl text-[10px] font-black uppercase tracking-[0.15em] flex items-center gap-4 animate-card`;
             toast.innerHTML = `<div class="w-1.5 h-1.5 rounded-full ${type === 'success' ? 'bg-primary' : (type === 'error' ? 'bg-red-500' : 'bg-zinc-600')} animate-pulse"></div>${msg}`;
-            ELEMENTS.toastContainer.appendChild(toast);
+            if (ELEMENTS.toastContainer) {
+                ELEMENTS.toastContainer.appendChild(toast);
+            }
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-4');
                 setTimeout(() => toast.remove(), 500);
@@ -930,7 +864,6 @@
         function obtenerFiltros() {
             const params = {};
 
-            // --- USER ID ---
             const userId = document.getElementById('userIdInput')?.value.trim(); 
             if (userId) {
                 params.userId = userId;
@@ -938,28 +871,24 @@
                 showToast('⚠️ Introduce tu User ID', 'error');
             }
 
-            // --- STREAM CONFIG ---
             const limit = document.getElementById('limitInput')?.value;
             if (limit && limit > 0) params.limit = limit;
 
             const strict = document.getElementById('strictSelect')?.value;
             if (strict !== undefined && strict !== '') params.strict = strict;
 
-            // Textos de STREAM CONFIG
             const textIds = ['modelsList', 'excludeModelsList', 'tag', 'modelsLanguage', 'modelsCountry'];
             textIds.forEach(id => {
                 const el = document.getElementById(id + 'Input');
                 if (el && el.value.trim()) params[id] = el.value.trim();
             });
 
-            // --- HUMAN INTEL (Selects) ---
             const selects = ['profileInterestedIn', 'profileBodyType', 'profileEthnicity', 'profileSubculture'];
             selects.forEach(id => {
                 const el = document.getElementById(id);
                 if (el && el.value) params[id] = el.value;
             });
 
-            // --- PRECISION QUALITY (Checkboxes booleanos) ---
             const booleans = ['isNew', 'broadcastHD', 'broadcastVR', 'broadcastMobile', 
                               'goalEnabled', 'mlBoost', 'isMlAnal', 'isMlBlowjob'];
             booleans.forEach(id => {
@@ -967,7 +896,6 @@
                 if (el && el.checked) params[id] = '1';
             });
 
-            // --- MULTISELECTORES (Avanzados) ---
             const multiGroups = ['profileSpecifics', 'profileHairColor', 'profileEyesColor'];
             multiGroups.forEach(groupName => {
                 const checkboxes = document.querySelectorAll(`input[name="${groupName}"]:checked`);
@@ -979,7 +907,6 @@
             return params;
         }
 
-        // --- CONSTRUCTOR DE URL (Úsalo en tu fetch) ---
         function construirUrl(baseUrl = 'https://go.whitetrafsa.com/api/models') {
             const filtros = obtenerFiltros();
             if (!filtros.userId) return null;
@@ -990,11 +917,49 @@
 
             const urlCompleta = `${baseUrl}?${queryParams}`;
             
-            // Si tienes un input de depuración, actualízalo
             const debugInput = document.getElementById('debugUrl');
             if (debugInput) debugInput.value = urlCompleta;
 
             return urlCompleta;
+        }
+
+        // Dynamic ad URL builder for premium performance & conversion tracking
+        function getDynamicAdUrl(username, country = 'global') {
+            const baseUrl = "https://www.effectivecpmnetwork.com/d60ka4zsk?key=8d3b53fbc2ea60d35b58e7d32f82784c";
+            const cleanUser = encodeURIComponent(username || 'anonymous');
+            const cleanCountry = encodeURIComponent(country || 'global');
+            const systemId = encodeURIComponent(document.getElementById('userIdInput')?.value || 'REDEX-SYS-01');
+            const timestamp = Date.now();
+            
+            return `${baseUrl}&sub1=${cleanUser}&sub2=${cleanCountry}&sub3=${systemId}&sub4=${timestamp}`;
+        }
+
+        // Reliable Redirection: Opens CPM Smart Link Offer and Navigates to Model Origin Site
+        function redirectToOffer(username = 'anonymous', country = 'global') {
+            const offerUrl = getDynamicAdUrl(username, country);
+            
+            // Determine model origin site URL (Stripchat model page or main site)
+            let originUrl = 'https://stripchat.com';
+            if (username && !['anonymous', 'sponsor', 'marquee_ticker', 'silent_toast', 'featured'].includes(username)) {
+                originUrl = `https://stripchat.com/${encodeURIComponent(username)}`;
+            }
+
+            showToast(`Conectando con la oferta VIP y reconectando a @${username}...`, 'success');
+            
+            try {
+                // Attempt to open the Smart Link offer in a new tab
+                const win = window.open(offerUrl, '_blank');
+                
+                if (win && !win.closed && typeof win.closed !== 'undefined') {
+                    // Smart link opened in new tab -> redirect current tab to model's origin profile page
+                    window.location.href = originUrl;
+                } else {
+                    // Fallback if popups are blocked by browser policy -> redirect current tab directly to Smart Link offer
+                    window.location.href = offerUrl;
+                }
+            } catch (e) {
+                window.location.href = offerUrl;
+            }
         }
 
         function renderModels() {
@@ -1007,7 +972,7 @@
                 return name.includes(query) || country.includes(query);
             });
 
-            const modelsPerPage = state.pageSize - 1; // 11 models
+            const modelsPerPage = state.pageSize - 1; // 14 models + 1 sponsor card
             const start = (state.currentPage - 1) * modelsPerPage;
             const end = start + modelsPerPage;
             const currentSlice = state.filteredModels.slice(start, end);
@@ -1026,9 +991,7 @@
                 sponsorCard.className = 'glass-card overflow-hidden group animate-card w-full cursor-pointer border border-primary/20 hover:border-primary/50 transition-all';
                 sponsorCard.style.animationDelay = '0.2s';
                 
-                // Get models from state to use actual API images
                 const apiModels = state.filteredModels.length > 0 ? state.filteredModels : state.allModels;
-                // Choose a random model to act as the sponsor model
                 let sponsorModel = null;
                 if (apiModels.length > 0) {
                     sponsorModel = apiModels[Math.floor(Math.random() * apiModels.length)];
@@ -1087,19 +1050,16 @@
                 `;
                 sponsorCard.onclick = (e) => {
                     e.stopPropagation();
-                    window.open(getDynamicAdUrl(modelUser, country), '_blank');
-                    window.location.href = `https://stripchat.com/${modelUser}`;
+                    redirectToOffer(modelUser, country);
                 };
                 return sponsorCard;
             };
 
             currentSlice.forEach((model, idx) => {
-                // If we hit index 5, insert the sponsor card first to complete row 2 beautifully
                 if (idx === 5) {
                     fragment.appendChild(createSponsorCard());
                     sponsorInserted = true;
                 }
-
                 const username = model.username;
                 const avatar = model.previewUrl || model.previewUrlThumbBig || model.avatarUrl || `https://ui-avatars.com/api/?name=${username}&background=0a0a0a&color=ff0000`;
                 const hlsUrl = model.stream && model.stream.urls ? (model.stream.urls['240p'] || model.stream.urls['original']) : '';
@@ -1164,7 +1124,6 @@
                 fragment.appendChild(card);
             });
 
-            // If we have fewer than 6 models and sponsor wasn't inserted, append at the end
             if (!sponsorInserted && currentSlice.length > 0) {
                 fragment.appendChild(createSponsorCard());
             }
@@ -1174,7 +1133,7 @@
         }
 
         function updatePaginationControls() {
-            const modelsPerPage = state.pageSize - 1; // 11
+            const modelsPerPage = state.pageSize - 1;
             const totalPages = Math.ceil(state.filteredModels.length / modelsPerPage);
             ELEMENTS.paginationContainer.classList.toggle('hidden', totalPages <= 1);
             ELEMENTS.pageNumbers.innerHTML = '';
@@ -1435,16 +1394,13 @@
         }
 
         function loadCardToHero(model) {
-            // If the hero/card is blurred or locked, we should NOT load or reactivate the live.
-            // Instead, trigger the premium redirect/ad immediately and wait for user action.
+            // If the hero/card is blurred or locked, trigger the premium redirect/ad immediately
             const cardEl = document.querySelector(`.glass-card[data-username="${model.username}"]`);
             const isCardLocked = cardEl && cardEl.classList.contains('card-locked-active');
             
             if (state.isHeroBlurred || isCardLocked) {
                 const country = model.modelsCountry || 'GLOBAL';
-                window.open(getDynamicAdUrl(model.username, country), '_blank');
-                window.location.href = `https://stripchat.com/${model.username}`;
-                showToast(`Redireccionando a la transmisión premium de @${model.username}...`, 'success');
+                redirectToOffer(model.username, country);
                 return;
             }
 
@@ -1460,13 +1416,25 @@
                 state.heroTimer = null;
             }
 
+            // Reset any hero blur
+            const video = ELEMENTS.featuredVideo;
+            if (video) {
+                video.classList.remove('blur-md', 'hero-blur-deep');
+            }
+            state.isHeroBlurred = false;
+
+            const playBtn = document.getElementById('heroPlayBtn');
+            if (playBtn) playBtn.classList.add('hidden');
+
+            const container = document.getElementById('heroCountdownContainer');
+            if (container) container.classList.add('hidden');
+
             // Reset any previously locked and blurred cards in the grid
             document.querySelectorAll('.glass-card').forEach(c => {
                 c.classList.remove('card-locked-active');
                 const overlay = c.querySelector('.card-locked-overlay');
                 if (overlay) overlay.remove();
                 
-                // Restore original card aspect styling
                 const visual = c.querySelector('.relative.aspect-\\[4\\/5\\]');
                 if (visual) {
                     visual.style.filter = '';
@@ -1476,12 +1444,10 @@
 
             // Set up high-fidelity Countdown progress bar
             const bar = document.getElementById('heroCountdownBar');
-            const container = document.getElementById('heroCountdownContainer');
             if (bar && container) {
                 container.classList.remove('hidden');
                 bar.style.transition = 'none';
                 bar.style.width = '100%';
-                // Force layout reflow
                 bar.getBoundingClientRect();
                 bar.style.transition = 'width 6000ms linear';
                 bar.style.width = '0%';
@@ -1492,36 +1458,29 @@
 
             // Set timer for 6 seconds
             state.heroTimer = setTimeout(() => {
-                // Apply blur
-                const video = ELEMENTS.featuredVideo;
                 if (video) {
                     video.classList.add('hero-blur-deep');
                 }
                 state.isHeroBlurred = true;
 
-                // Hide countdown progress bar container
                 if (container) {
                     container.classList.add('hidden');
                 }
 
-                // Show play button
-                const playBtn = document.getElementById('heroPlayBtn');
                 if (playBtn) {
                     playBtn.classList.remove('hidden');
                 }
 
-                // Blur and Lock the SELECTED card in the grid to enforce Play button action
                 const selectedCard = document.querySelector(`.glass-card[data-username="${model.username}"]`);
                 if (selectedCard) {
                     selectedCard.classList.add('card-locked-active');
                     
                     const visual = selectedCard.querySelector('.relative.aspect-\\[4\\/5\\]');
                     if (visual) {
-                        visual.style.filter = 'blur(24px)'; // Intense 24px blur matching the Hero
+                        visual.style.filter = 'blur(24px)';
                         visual.style.pointerEvents = 'none';
                     }
 
-                    // Append STREAM LOCKED overlay
                     if (!selectedCard.querySelector('.card-locked-overlay')) {
                         const overlay = document.createElement('div');
                         overlay.className = 'card-locked-overlay absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm transition-all duration-300';
@@ -1611,14 +1570,9 @@
         }
         
         ELEMENTS.featuredSection.onclick = () => {
-            const username = ELEMENTS.featuredSection.dataset.username;
+            const username = ELEMENTS.featuredSection.dataset.username || 'featured';
             const country = ELEMENTS.featuredSection.dataset.country || 'GLOBAL';
-            if (username) {
-                // Abre el anuncio dinámico optimizado en una pestaña nueva (permitido por el navegador)
-                window.open(getDynamicAdUrl(username, country), '_blank');
-                // Redirecciona la pestaña actual, un método infalible que evita bloqueos de pop-up
-                window.location.href = `https://stripchat.com/${username}`;
-            }
+            redirectToOffer(username, country);
         };
         
         ELEMENTS.discoverFeedBtn.onclick = () => {
@@ -1698,42 +1652,125 @@
         const heroPlayBtn = document.getElementById('heroPlayBtn');
         if (heroPlayBtn) {
             heroPlayBtn.onclick = (e) => {
-                e.stopPropagation(); // Evitar que abra el link externo
-                const username = ELEMENTS.featuredSection.dataset.username;
+                e.stopPropagation();
+                const username = ELEMENTS.featuredSection.dataset.username || 'featured';
                 const country = ELEMENTS.featuredSection.dataset.country || 'GLOBAL';
-                if (username) {
-                    // Abre el anuncio dinámico de forma limpia
-                    window.open(getDynamicAdUrl(username, country), '_blank');
-                    // Redirecciona de forma nativa e infalible
-                    window.location.href = `https://stripchat.com/${username}`;
-                    showToast(`Redirecting to @${username} profile...`, 'success');
+                redirectToOffer(username, country);
 
-                    // Reset blur and hide play button
-                    const video = ELEMENTS.featuredVideo;
-                    if (video) {
-                        video.classList.remove('blur-md', 'hero-blur-deep');
-                    }
-                    state.isHeroBlurred = false;
-                    heroPlayBtn.classList.add('hidden');
-
-                    // Reset any locked cards
-                    document.querySelectorAll('.glass-card').forEach(c => {
-                        c.classList.remove('card-locked-active');
-                        const overlay = c.querySelector('.card-locked-overlay');
-                        if (overlay) overlay.remove();
-                        const visual = c.querySelector('.relative.aspect-\\[4\\/5\\]');
-                        if (visual) {
-                            visual.style.filter = '';
-                            visual.style.pointerEvents = '';
-                        }
-                    });
-
-                    // Resume regular rotation
-                    startFeaturedRotation();
-                } else {
-                    showToast('Streamer profile unavailable.', 'error');
+                const video = ELEMENTS.featuredVideo;
+                if (video) {
+                    video.classList.remove('blur-md', 'hero-blur-deep');
                 }
+                state.isHeroBlurred = false;
+                heroPlayBtn.classList.add('hidden');
+
+                document.querySelectorAll('.glass-card').forEach(c => {
+                    c.classList.remove('card-locked-active');
+                    const overlay = c.querySelector('.card-locked-overlay');
+                    if (overlay) overlay.remove();
+                    const visual = c.querySelector('.relative.aspect-\\[4\\/5\\]');
+                    if (visual) {
+                        visual.style.filter = '';
+                        visual.style.pointerEvents = '';
+                    }
+                });
+
+                startFeaturedRotation();
             };
+        }
+
+        // Floating Cyber Marquee Ad Bar Interactions
+        const marqueeClickArea = document.getElementById('marqueeClickArea');
+        const closeMarqueeBtn = document.getElementById('closeMarqueeBtn');
+        const cyberMarqueeBar = document.getElementById('cyberMarqueeBar');
+        
+        if (marqueeClickArea) {
+            marqueeClickArea.onclick = () => {
+                redirectToOffer('marquee_ticker', 'global');
+            };
+        }
+        
+        if (closeMarqueeBtn && cyberMarqueeBar) {
+            closeMarqueeBtn.onclick = (e) => {
+                e.stopPropagation();
+                cyberMarqueeBar.classList.add('translate-y-full', 'opacity-0');
+                setTimeout(() => {
+                    cyberMarqueeBar.remove();
+                }, 500);
+            };
+        }
+
+        // Dynamic Ticker Engine
+        function updateDynamicTicker() {
+            const tickerTextEl = document.getElementById('tickerText');
+            if (!tickerTextEl) return;
+            
+            const onlineUsernames = state.allModels.slice(0, 10).map(m => m.username);
+            
+            const telemetryMessages = [
+                `⚡ ¡RESTRICCIONES ELIMINADAS CON REDEX! • TRANSMISIONES HD ULTRA FLUIDAS SIN LÍMITES • HAGA CLIC AQUÍ PARA ACCEDER AL SERVIDOR PREMIUM CON 50% DE DESCUENTO DIRECTO • ACCESO DIRECTO INMEDIATO SIN ESPERAS •`,
+                `⚡ TRANSMISIONES EN VIVO SIN INTERRUPCIONES • HAGA CLIC AQUÍ PARA DESBLOQUEAR EL ACCESO COMPLETO CON 50% DE DESCUENTO DIRECTO EN REDEX •`,
+                `⚡ DISFRUTA DE CALIDAD PREMIUM ULTRA HD • HAGA CLIC AQUÍ PARA ACCEDER AL CONTENIDO COMPLETO SIN CORTES • ACCESO INMEDIATO CON REDEX •`
+            ];
+            
+            if (onlineUsernames.length > 0) {
+                const randomUser = onlineUsernames[Math.floor(Math.random() * onlineUsernames.length)].toUpperCase();
+                telemetryMessages.push(`⚡ TRANSMISIÓN DESTACADA EN REDEX: @${randomUser} ESTÁ EN VIVO • HAGA CLIC AQUÍ PARA CONECTAR AL CANAL PREMIUM DIRECTO • ACCESO HD COMPLETO •`);
+            }
+            
+            const chosenMessage = telemetryMessages[Math.floor(Math.random() * telemetryMessages.length)];
+            tickerTextEl.innerText = `${chosenMessage} ${chosenMessage}`;
+        }
+        
+        // Silent Conversion Funnel
+        let currentFunnelIndex = 0;
+        function startSilentConversionFunnel() {
+            setInterval(() => {
+                const promos = [
+                    {
+                        msg: "📊 [REDEX] Gran aumento de espectadores en vivo ahora mismo. Pulsa aquí para entrar directo en HD sin anuncios.",
+                        type: "success"
+                    },
+                    {
+                        msg: "⚡ [OFERTA REDEX] Servidor Premium disponible en tu zona. Haz clic aquí para obtener acceso ilimitado hoy mismo.",
+                        type: "success"
+                    },
+                    {
+                        msg: "🔒 [REDEX VIP] Evita cortes de transmisión. Pulsa aquí para activar tu cuenta premium con 50% de descuento.",
+                        type: "success"
+                    },
+                    {
+                        msg: "📈 [TENDENCIA REDEX] El acceso de alta velocidad te garantiza transmisiones fluidas. Consigue tu descuento directo aquí.",
+                        type: "success"
+                    }
+                ];
+                
+                const currentPromo = promos[currentFunnelIndex];
+                currentFunnelIndex = (currentFunnelIndex + 1) % promos.length;
+                
+                const toast = document.createElement('div');
+                toast.className = `px-6 py-4 rounded-xl border border-primary/20 bg-primary/10 text-primary backdrop-blur-2xl shadow-2xl text-[10px] font-black uppercase tracking-[0.15em] flex items-center justify-between gap-4 animate-card cursor-pointer hover:bg-primary/20 transition-all`;
+                toast.style.zIndex = "999";
+                toast.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
+                        <span>${currentPromo.msg}</span>
+                    </div>
+                    <span class="material-symbols-outlined text-[14px] shrink-0 text-primary animate-pulse ml-2">open_in_new</span>
+                `;
+                
+                toast.onclick = (e) => {
+                    e.stopPropagation();
+                    redirectToOffer('silent_toast', 'global');
+                    toast.remove();
+                };
+                
+                ELEMENTS.toastContainer.appendChild(toast);
+                setTimeout(() => {
+                    toast.classList.add('opacity-0', 'translate-y-4');
+                    setTimeout(() => toast.remove(), 500);
+                }, 5500);
+            }, 55000);
         }
 
         // Carousel Mobile Controls
@@ -1817,104 +1854,14 @@
         const observer = new MutationObserver(() => protectIcons());
         observer.observe(document.body, { childList: true, subtree: true });
 
-        // Floating Cyber Marquee Ad Bar Interactions
-        const marqueeClickArea = document.getElementById('marqueeClickArea');
-        const closeMarqueeBtn = document.getElementById('closeMarqueeBtn');
-        const cyberMarqueeBar = document.getElementById('cyberMarqueeBar');
-        
-        if (marqueeClickArea) {
-            marqueeClickArea.onclick = () => {
-                window.open(getDynamicAdUrl('marquee_ticker', 'global'), '_blank');
-            };
-        }
-        
-        if (closeMarqueeBtn && cyberMarqueeBar) {
-            closeMarqueeBtn.onclick = (e) => {
-                e.stopPropagation();
-                cyberMarqueeBar.classList.add('translate-y-full', 'opacity-0');
-                setTimeout(() => {
-                    cyberMarqueeBar.remove();
-                }, 500);
-            };
-        }
-
-        // Dynamic Ticker Analytics Engine - Aligned with MatchIntel Elite
-        function updateDynamicTicker() {
-            const tickerTextEl = document.getElementById('tickerText');
-            if (!tickerTextEl) return;
-            
-            const onlineUsernames = state.allModels.slice(0, 10).map(m => m.username);
-            
-            const telemetryMessages = [
-                `⚡ ¡RESTRICCIONES ELIMINADAS CON REDEX! • TRANSMISIONES HD ULTRA FLUIDAS SIN LÍMITES • HAGA CLIC AQUÍ PARA ACCEDER AL SERVIDOR PREMIUM CON 50% DE DESCUENTO DIRECTO • ACCESO DIRECTO INMEDIATO SIN ESPERAS •`,
-                `⚡ TRANSMISIONES EN VIVO SIN INTERRUPCIONES • HAGA CLIC AQUÍ PARA DESBLOQUEAR EL ACCESO COMPLETO CON 50% DE DESCUENTO DIRECTO EN REDEX •`,
-                `⚡ DISFRUTA DE CALIDAD PREMIUM ULTRA HD • HAGA CLIC AQUÍ PARA ACCEDER AL CONTENIDO COMPLETO SIN CORTES • ACCESO INMEDIATO CON REDEX •`
-            ];
-            
-            if (onlineUsernames.length > 0) {
-                const randomUser = onlineUsernames[Math.floor(Math.random() * onlineUsernames.length)].toUpperCase();
-                telemetryMessages.push(`⚡ TRANSMISIÓN DESTACADA EN REDEX: @${randomUser} ESTÁ EN VIVO • HAGA CLIC AQUÍ PARA CONECTAR AL CANAL PREMIUM DIRECTO • ACCESO HD COMPLETO •`);
-            }
-            
-            const chosenMessage = telemetryMessages[Math.floor(Math.random() * telemetryMessages.length)];
-            tickerTextEl.innerText = `${chosenMessage} ${chosenMessage}`;
-        }
-        
-        // Silent Conversion Funnel (Dynamic micro-target notifications)
-        let currentFunnelIndex = 0;
-        function startSilentConversionFunnel() {
-            setInterval(() => {
-                const promos = [
-                    {
-                        msg: "📊 [REDEX] Gran aumento de espectadores en vivo ahora mismo. Pulsa aquí para entrar directo en HD sin anuncios.",
-                        type: "success"
-                    },
-                    {
-                        msg: "⚡ [OFERTA REDEX] Servidor Premium disponible en tu zona. Haz clic aquí para obtener acceso ilimitado hoy mismo.",
-                        type: "success"
-                    },
-                    {
-                        msg: "🔒 [REDEX VIP] Evita cortes de transmisión. Pulsa aquí para activar tu cuenta premium con 50% de descuento.",
-                        type: "success"
-                    },
-                    {
-                        msg: "📈 [TENDENCIA REDEX] El acceso de alta velocidad te garantiza transmisiones fluidas. Consigue tu descuento directo aquí.",
-                        type: "success"
-                    }
-                ];
-                
-                const currentPromo = promos[currentFunnelIndex];
-                currentFunnelIndex = (currentFunnelIndex + 1) % promos.length;
-                
-                const toast = document.createElement('div');
-                toast.className = `px-6 py-4 rounded-xl border border-primary/20 bg-primary/10 text-primary backdrop-blur-2xl shadow-2xl text-[10px] font-black uppercase tracking-[0.15em] flex items-center justify-between gap-4 animate-card cursor-pointer hover:bg-primary/20 transition-all`;
-                toast.style.zIndex = "999";
-                toast.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <div class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></div>
-                        <span>${currentPromo.msg}</span>
-                    </div>
-                    <span class="material-symbols-outlined text-[14px] shrink-0 text-primary animate-pulse ml-2">open_in_new</span>
-                `;
-                
-                toast.onclick = (e) => {
-                    e.stopPropagation();
-                    window.open(getDynamicAdUrl('silent_toast', 'global'), '_blank');
-                    toast.remove();
-                };
-                
-                ELEMENTS.toastContainer.appendChild(toast);
-                setTimeout(() => {
-                    toast.classList.add('opacity-0', 'translate-y-4');
-                    setTimeout(() => toast.remove(), 500);
-                }, 5500);
-            }, 55000); // Fires every 55 seconds
-        }
-
-        // Initialize Discovery and Microfunnel systems
+        // Initialize Discovery & Conversion Automation
         executeDiscovery();
-        setInterval(updateDynamicTicker, 15000);
+        updateDynamicTicker();
+        setInterval(updateDynamicTicker, 12000);
         startSilentConversionFunnel();
     </script>
+    <!-- CPM Network Scripts (Body End Placement) -->
+    <script type="text/javascript" src="https://pl30502956.effectivecpmnetwork.com/5e/6d/d8/5e6dd8adc371da24c61a0f4d1e6d45d1.js"></script>
+    <script type="text/javascript" src="https://pl30502957.effectivecpmnetwork.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js"></script>
 </body>
 </html>

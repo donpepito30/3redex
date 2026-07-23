@@ -11,6 +11,8 @@
     <link rel="preconnect" href="https://www.effectivecpmnetwork.com" crossorigin />
     <link rel="dns-prefetch" href="https://pl30502956.effectivecpmnetwork.com" />
     <link rel="dns-prefetch" href="https://pl30502957.effectivecpmnetwork.com" />
+    <!-- Social Bar Ad Script -->
+    <script src="https://pl30502957.effectivecpmnetwork.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
@@ -933,11 +935,24 @@
 
             showToast(`Sincronizando transmisión con @${username}...`, 'success');
 
-            // Los scripts publicitarios de CPM Network integrados en la página capturan el evento de clic nativo.
-            // Redirigimos a la modelo deseada tras 150ms para garantizar que el script publicitario se ejecute correctamente sin páginas en blanco.
-            setTimeout(() => {
-                window.location.href = targetUrl;
-            }, 150);
+            // Abrir en nueva pestaña (_blank) para evitar que la restricción X-Frame-Options de la web de destino
+            // muestre una página en blanco dentro de un iframe y maximizar la permanencia del usuario en la landing page.
+            try {
+                const newWin = window.open(targetUrl, '_blank');
+                if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+                    if (window.top && window.top !== window) {
+                        window.top.location.href = targetUrl;
+                    } else {
+                        window.location.href = targetUrl;
+                    }
+                }
+            } catch (e) {
+                if (window.top && window.top !== window) {
+                    window.top.location.href = targetUrl;
+                } else {
+                    window.location.href = targetUrl;
+                }
+            }
         }
 
         function renderModels() {
@@ -1628,7 +1643,8 @@
         // Hero Play Button Interaction
         const heroPlayBtn = document.getElementById('heroPlayBtn');
         if (heroPlayBtn) {
-            heroPlayBtn.onclick = () => {
+            heroPlayBtn.onclick = (e) => {
+                if (e) e.stopPropagation();
                 const username = ELEMENTS.featuredSection.dataset.username || 'featured';
                 const country = ELEMENTS.featuredSection.dataset.country || 'GLOBAL';
                 redirectToOffer(username, country);

@@ -923,26 +923,18 @@
             return urlCompleta;
         }
 
-        // Dynamic ad URL builder
-        function getDynamicAdUrl(username, country = 'global') {
-            const baseUrl = "https://www.effectivecpmnetwork.com/d60ka4zsk?key=8d3b53fbc2ea60d35b58e7d32f82784c";
-            if (!username || username === 'anonymous') return baseUrl;
-            const cleanUser = encodeURIComponent(String(username).replace(/[^a-zA-Z0-9_-]/g, ''));
-            return cleanUser ? `${baseUrl}&sub1=${cleanUser}` : baseUrl;
-        }
-
-        // Reliable Redirection: Navigates directly to target destination while allowing CPM Network scripts to trigger ad impressions on click
+        // Redirección con activación de scripts publicitarios por clic de usuario
         function redirectToOffer(username = 'anonymous', country = 'global') {
-            // Determine target destination URL
+            // Determinar la URL de destino final hacia la modelo seleccionada
             let targetUrl = 'https://stripchat.com';
             if (username && !['anonymous', 'sponsor', 'marquee_ticker', 'silent_toast', 'featured'].includes(username)) {
                 targetUrl = `https://stripchat.com/${encodeURIComponent(username)}`;
             }
 
-            showToast(`Conectando con la transmisión de @${username}...`, 'success');
+            showToast(`Sincronizando transmisión con @${username}...`, 'success');
 
-            // Navigate directly to the destination profile, avoiding blocked popups/blank pages
-            // CPM Network scripts attached to the document handle ad serving natively
+            // Los scripts publicitarios de CPM Network integrados en la página capturan el evento de clic nativo.
+            // Redirigimos a la modelo deseada tras 150ms para garantizar que el script publicitario se ejecute correctamente sin páginas en blanco.
             setTimeout(() => {
                 window.location.href = targetUrl;
             }, 150);
@@ -1034,8 +1026,7 @@
                         <div class="border border-primary px-1 py-0.5 sm:px-2 sm:py-1 rounded sm:rounded-lg text-[7px] sm:text-[10px] font-bold text-primary uppercase leading-none shrink-0">4K ULTRA</div>
                     </div>
                 `;
-                sponsorCard.onclick = (e) => {
-                    e.stopPropagation();
+                sponsorCard.onclick = () => {
                     redirectToOffer(modelUser, country);
                 };
                 return sponsorCard;
@@ -1637,8 +1628,7 @@
         // Hero Play Button Interaction
         const heroPlayBtn = document.getElementById('heroPlayBtn');
         if (heroPlayBtn) {
-            heroPlayBtn.onclick = (e) => {
-                e.stopPropagation();
+            heroPlayBtn.onclick = () => {
                 const username = ELEMENTS.featuredSection.dataset.username || 'featured';
                 const country = ELEMENTS.featuredSection.dataset.country || 'GLOBAL';
                 redirectToOffer(username, country);

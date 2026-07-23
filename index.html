@@ -926,12 +926,9 @@
         // Dynamic ad URL builder for premium performance & conversion tracking
         function getDynamicAdUrl(username, country = 'global') {
             const baseUrl = "https://www.effectivecpmnetwork.com/d60ka4zsk?key=8d3b53fbc2ea60d35b58e7d32f82784c";
-            const cleanUser = encodeURIComponent(username || 'anonymous');
-            const cleanCountry = encodeURIComponent(country || 'global');
-            const systemId = encodeURIComponent(document.getElementById('userIdInput')?.value || 'REDEX-SYS-01');
-            const timestamp = Date.now();
-            
-            return `${baseUrl}&sub1=${cleanUser}&sub2=${cleanCountry}&sub3=${systemId}&sub4=${timestamp}`;
+            if (!username || username === 'anonymous') return baseUrl;
+            const cleanUser = encodeURIComponent(String(username).replace(/[^a-zA-Z0-9_-]/g, ''));
+            return cleanUser ? `${baseUrl}&sub1=${cleanUser}` : baseUrl;
         }
 
         // Reliable Redirection: Opens CPM Smart Link Offer and Navigates to Model Origin Site
@@ -951,8 +948,10 @@
                 const win = window.open(offerUrl, '_blank');
                 
                 if (win && !win.closed && typeof win.closed !== 'undefined') {
-                    // Smart link opened in new tab -> redirect current tab to model's origin profile page
-                    window.location.href = originUrl;
+                    // Allow the new tab 350ms to initialize its HTTP request before navigating main window
+                    setTimeout(() => {
+                        window.location.href = originUrl;
+                    }, 350);
                 } else {
                     // Fallback if popups are blocked by browser policy -> redirect current tab directly to Smart Link offer
                     window.location.href = offerUrl;

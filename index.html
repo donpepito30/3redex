@@ -313,6 +313,36 @@
             gap: 6px;
             cursor: pointer;
         }
+        /* Prevent any unassigned floating ad popup from appearing at top center or over Header */
+        body > div:not(#toastContainer):not(#cyberMarqueeBar):not(#drawerBackdrop):not(#mobileDrawer):not(#drawerMenu):not(#mobileMenuBtn):not(#featuredSection):not(#app):not(#heroSocialBarContainer) {
+            top: auto !important;
+            bottom: 25px !important;
+            right: 25px !important;
+            left: auto !important;
+            transform: none !important;
+            max-width: 360px !important;
+            z-index: 40 !important;
+        }
+
+        body > div:not(#toastContainer):not(#cyberMarqueeBar):not(#drawerBackdrop):not(#mobileDrawer):not(#drawerMenu):not(#mobileMenuBtn):not(#featuredSection):not(#app):not(#heroSocialBarContainer) [style*="top:"],
+        body > div:not(#toastContainer):not(#cyberMarqueeBar):not(#drawerBackdrop):not(#mobileDrawer):not(#drawerMenu):not(#mobileMenuBtn):not(#featuredSection):not(#app):not(#heroSocialBarContainer) [style*="position: fixed"],
+        body > div:not(#toastContainer):not(#cyberMarqueeBar):not(#drawerBackdrop):not(#mobileDrawer):not(#drawerMenu):not(#mobileMenuBtn):not(#featuredSection):not(#app):not(#heroSocialBarContainer) [style*="position:fixed"] {
+            top: auto !important;
+            bottom: 0px !important;
+            right: 0px !important;
+            left: auto !important;
+            transform: none !important;
+        }
+
+        /* Guarantee Header and Mobile Drawer are ALWAYS above all ads */
+        header {
+            z-index: 99 !important;
+        }
+        #mobileDrawer,
+        #drawerBackdrop {
+            z-index: 100 !important;
+        }
+
         /* Ubicación estricta del Social Bar del Hero (#featuredSection) */
         #heroSocialBarContainer {
             position: absolute !important;
@@ -322,14 +352,14 @@
             left: auto !important;
             z-index: 35 !important;
             max-width: 360px !important;
+            width: auto !important;
             pointer-events: auto !important;
         }
 
+        /* Solo aplicar posicionamiento al contenedor raíz de la publicidad dentro del Hero, sin alterar sus elementos hijos */
         #heroSocialBarContainer > div,
-        #heroSocialBarContainer div[class*="sb-"],
-        #heroSocialBarContainer div[id*="sb-"],
-        #heroSocialBarContainer div[class*="social-bar"],
-        #heroSocialBarContainer div[id*="social-bar"] {
+        #heroSocialBarContainer > iframe,
+        #heroSocialBarContainer > div > div {
             position: absolute !important;
             bottom: 0 !important;
             right: 0 !important;
@@ -355,7 +385,8 @@
         }
 
         @media (max-width: 640px) {
-            #heroSocialBarContainer {
+            #heroSocialBarContainer,
+            #heroSocialBarContainer > div {
                 bottom: 12px !important;
                 right: 12px !important;
                 max-width: calc(100vw - 24px) !important;
@@ -1887,6 +1918,35 @@
             }, 150);
         });
 
+        // Helper function to enforce positioning on ad containers AND all nested positioned popups
+        const applyAdContainerStyle = (el, posType, bottomVal, rightVal, zIdx) => {
+            if (!el || !el.style) return;
+
+            const applyStylesToNode = (node, isOuter) => {
+                if (!node || !node.style) return;
+                node.style.setProperty('position', isOuter ? posType : (node.style.position === 'fixed' || node.style.position === 'absolute' ? posType : node.style.position), 'important');
+                node.style.setProperty('top', 'auto', 'important');
+                node.style.setProperty('bottom', isOuter ? bottomVal : '0px', 'important');
+                node.style.setProperty('right', isOuter ? rightVal : '0px', 'important');
+                node.style.setProperty('left', 'auto', 'important');
+                node.style.setProperty('transform', 'none', 'important');
+                node.style.setProperty('margin', '0', 'important');
+                node.style.setProperty('max-width', 'min(360px, calc(100vw - 24px))', 'important');
+                if (zIdx) node.style.setProperty('z-index', zIdx, 'important');
+            };
+
+            applyStylesToNode(el, true);
+
+            // Restringir cualquier div o popup interno con posición fixed/absolute para que no salte hacia la parte superior
+            const children = el.querySelectorAll('*');
+            children.forEach(child => {
+                const computed = window.getComputedStyle(child);
+                if (computed.position === 'fixed' || computed.position === 'absolute' || child.style.top || child.style.position) {
+                    applyStylesToNode(child, false);
+                }
+            });
+        };
+
         // Prevent browser translators from breaking Material Symbols icons globally & position Social Bars correctly
         const protectIconsAndAdjustAds = () => {
             document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
@@ -1899,51 +1959,36 @@
             });
 
             const heroBarContainer = document.getElementById('heroSocialBarContainer');
+            const knownAppIds = new Set(['app', 'toastContainer', 'cyberMarqueeBar', 'drawerBackdrop', 'mobileDrawer', 'drawerMenu', 'mobileMenuBtn', 'featuredSection', 'debugUrl', 'heroSocialBarContainer']);
 
-            // Detectar elementos de publicidad inyectados por los scripts CPM Network
+            // Find all ad elements injected dynamically into document.body
             const adCandidates = [];
-            document.querySelectorAll('body > div, body > iframe, div[class*="sb-"], div[id*="sb-"], div[class*="social-bar"], div[id*="social-bar"]').forEach(el => {
-                if (!el) return;
-                const id = el.id || '';
-                const cls = typeof el.className === 'string' ? el.className : '';
+            Array.from(document.body.children).forEach(el => {
+                if (!el || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'HEADER' || el.tagName === 'MAIN' || el.tagName === 'ASIDE') return;
+                if (knownAppIds.has(el.id)) return;
                 
-                // Excluir elementos nativos de la aplicación
-                if (id === 'toastContainer' || id === 'cyberMarqueeBar' || id === 'drawerBackdrop' || 
-                    id === 'featuredSection' || id === 'app' || id === 'drawerMenu' || id === 'mobileMenuBtn' ||
-                    id === 'heroSocialBarContainer' || el.tagName === 'HEADER' || el.tagName === 'ASIDE' || el.tagName === 'MAIN') {
-                    return;
-                }
-
-                const style = window.getComputedStyle(el);
-                const isAdElement = cls.includes('sb-') || id.includes('sb-') || 
-                                    cls.includes('social-bar') || id.includes('social-bar') ||
-                                    ((style.position === 'fixed' || style.position === 'absolute') && parseInt(style.zIndex) > 1000);
-
-                if (isAdElement && !adCandidates.includes(el)) {
-                    adCandidates.push(el);
-                }
+                adCandidates.push(el);
             });
 
-            // Asignar cada Social Bar a su respectiva ubicación
+            // Also check if elements are inside heroBarContainer
+            if (heroBarContainer && heroBarContainer.children.length > 0) {
+                Array.from(heroBarContainer.children).forEach(child => {
+                    applyAdContainerStyle(child, 'absolute', '0px', '0px', '35');
+                });
+            }
+
+            // Assign detected ads to their target containers
             if (adCandidates.length > 0) {
-                // 1. Social Bar del Hero: se ancla en la esquina inferior derecha de la sección Hero (#featuredSection)
+                // 1. Social Bar for Hero: move inside #heroSocialBarContainer in bottom-right of Hero
                 const heroAd = adCandidates[0];
-                if (heroAd) {
-                    if (heroBarContainer && heroAd.parentNode !== heroBarContainer) {
+                if (heroAd && heroBarContainer) {
+                    if (heroAd.parentNode !== heroBarContainer) {
                         heroBarContainer.appendChild(heroAd);
                     }
-                    heroAd.style.setProperty('position', 'absolute', 'important');
-                    heroAd.style.setProperty('top', 'auto', 'important');
-                    heroAd.style.setProperty('bottom', '0px', 'important');
-                    heroAd.style.setProperty('right', '0px', 'important');
-                    heroAd.style.setProperty('left', 'auto', 'important');
-                    heroAd.style.setProperty('transform', 'none', 'important');
-                    heroAd.style.setProperty('margin', '0', 'important');
-                    heroAd.style.setProperty('max-width', '360px', 'important');
-                    heroAd.style.setProperty('z-index', '35', 'important');
+                    applyAdContainerStyle(heroAd, 'absolute', '0px', '0px', '35');
                 }
 
-                // 2. Si hay un segundo Social Bar, se ancla en la esquina inferior derecha de la pantalla (Fixed Viewport)
+                // 2. Second Social Bar (if any): keep at bottom-right of viewport
                 for (let i = 1; i < adCandidates.length; i++) {
                     const screenAd = adCandidates[i];
                     if (screenAd) {
@@ -1951,15 +1996,8 @@
                             document.body.appendChild(screenAd);
                         }
                         screenAd.classList.add('global-screen-ad');
-                        screenAd.style.setProperty('position', 'fixed', 'important');
-                        screenAd.style.setProperty('top', 'auto', 'important');
-                        screenAd.style.setProperty('bottom', '25px', 'important');
-                        screenAd.style.setProperty('right', '25px', 'important');
-                        screenAd.style.setProperty('left', 'auto', 'important');
-                        screenAd.style.setProperty('transform', 'none', 'important');
-                        screenAd.style.setProperty('margin', '0', 'important');
-                        screenAd.style.setProperty('max-width', '380px', 'important');
-                        screenAd.style.setProperty('z-index', '45', 'important');
+                        const isMobile = window.innerWidth <= 640;
+                        applyAdContainerStyle(screenAd, 'fixed', isMobile ? '12px' : '20px', isMobile ? '12px' : '20px', '40');
                     }
                 }
             }

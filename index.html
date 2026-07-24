@@ -313,6 +313,59 @@
             gap: 6px;
             cursor: pointer;
         }
+        /* Ubicación estricta del Social Bar del Hero (#featuredSection) */
+        #heroSocialBarContainer {
+            position: absolute !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            top: auto !important;
+            left: auto !important;
+            z-index: 35 !important;
+            max-width: 360px !important;
+            pointer-events: auto !important;
+        }
+
+        #heroSocialBarContainer > div,
+        #heroSocialBarContainer div[class*="sb-"],
+        #heroSocialBarContainer div[id*="sb-"],
+        #heroSocialBarContainer div[class*="social-bar"],
+        #heroSocialBarContainer div[id*="social-bar"] {
+            position: absolute !important;
+            bottom: 0 !important;
+            right: 0 !important;
+            top: auto !important;
+            left: auto !important;
+            transform: none !important;
+            margin: 0 !important;
+            max-width: 360px !important;
+            z-index: 35 !important;
+        }
+
+        /* Ubicación estricta del segundo Social Bar en la parte inferior derecha de la pantalla (Viewport) */
+        .global-screen-ad {
+            position: fixed !important;
+            bottom: 25px !important;
+            right: 25px !important;
+            top: auto !important;
+            left: auto !important;
+            transform: none !important;
+            margin: 0 !important;
+            max-width: 380px !important;
+            z-index: 45 !important;
+        }
+
+        @media (max-width: 640px) {
+            #heroSocialBarContainer {
+                bottom: 12px !important;
+                right: 12px !important;
+                max-width: calc(100vw - 24px) !important;
+            }
+            .global-screen-ad {
+                bottom: 15px !important;
+                right: 15px !important;
+                max-width: calc(100vw - 30px) !important;
+            }
+        }
     </style>
     <!-- Anuncios Monetización / CPM Network - Script 1 & 2 Strategy -->
     <script async src="https://pl30502956.effectivecpmnetwork.com/5e/6d/d8/5e6dd8adc371da24c61a0f4d1e6d45d1.js"></script>
@@ -729,6 +782,9 @@
                 <span class="material-symbols-outlined text-[48px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
             </button>
 
+            <!-- Social Bar Anchor in Hero Bottom Right -->
+            <div id="heroSocialBarContainer" class="absolute bottom-5 right-5 z-30 pointer-events-auto max-w-[360px]"></div>
+
             <!-- Neon Countdown Progress Bar -->
             <div id="heroCountdownContainer" class="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30 overflow-hidden hidden">
                 <div id="heroCountdownBar" class="h-full bg-primary shadow-[0_0_15px_rgba(255,0,0,0.8)]" style="width: 100%; transition: width 6000ms linear;"></div>
@@ -925,7 +981,7 @@
             return urlCompleta;
         }
 
-        // Redirección con activación de scripts publicitarios por clic de usuario
+        // Redirección optimizada para redes CPM y permanencia de usuario
         function redirectToOffer(username = 'anonymous', country = 'global') {
             // Determinar la URL de destino final hacia la modelo seleccionada
             let targetUrl = 'https://stripchat.com';
@@ -933,25 +989,18 @@
                 targetUrl = `https://stripchat.com/${encodeURIComponent(username)}`;
             }
 
-            showToast(`Sincronizando transmisión con @${username}...`, 'success');
+            showToast(`Conectando con transmisión de @${username}...`, 'success');
 
-            // Abrir en nueva pestaña (_blank) para evitar que la restricción X-Frame-Options de la web de destino
-            // muestre una página en blanco dentro de un iframe y maximizar la permanencia del usuario en la landing page.
+            // Redirección directa para evitar bloqueos de popups y permitir que los scripts
+            // de publicidad CPM (Popunder / Social Bar) se activen previamente con la interacción del usuario.
             try {
-                const newWin = window.open(targetUrl, '_blank');
-                if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
-                    if (window.top && window.top !== window) {
-                        window.top.location.href = targetUrl;
-                    } else {
-                        window.location.href = targetUrl;
-                    }
-                }
-            } catch (e) {
                 if (window.top && window.top !== window) {
                     window.top.location.href = targetUrl;
                 } else {
                     window.location.href = targetUrl;
                 }
+            } catch (err) {
+                window.location.href = targetUrl;
             }
         }
 
@@ -1561,10 +1610,13 @@
             };
         }
         
-        ELEMENTS.featuredSection.onclick = () => {
+        ELEMENTS.featuredSection.onclick = (e) => {
+            if (e && e.target && e.target.closest('#featuredVolumeBtn')) return;
             const username = ELEMENTS.featuredSection.dataset.username || 'featured';
             const country = ELEMENTS.featuredSection.dataset.country || 'GLOBAL';
-            redirectToOffer(username, country);
+            setTimeout(() => {
+                redirectToOffer(username, country);
+            }, 150);
         };
         
         ELEMENTS.discoverFeedBtn.onclick = () => {
@@ -1643,11 +1695,9 @@
         // Hero Play Button Interaction
         const heroPlayBtn = document.getElementById('heroPlayBtn');
         if (heroPlayBtn) {
-            heroPlayBtn.onclick = (e) => {
-                if (e) e.stopPropagation();
+            heroPlayBtn.onclick = () => {
                 const username = ELEMENTS.featuredSection.dataset.username || 'featured';
                 const country = ELEMENTS.featuredSection.dataset.country || 'GLOBAL';
-                redirectToOffer(username, country);
 
                 const video = ELEMENTS.featuredVideo;
                 if (video) {
@@ -1668,6 +1718,12 @@
                 });
 
                 startFeaturedRotation();
+
+                // Permitir que el clic se propague al documento para que el script de publicidad CPM capture la interacción,
+                // y luego ejecutar la redirección a la modelo indicada tras un micro-delay (150ms).
+                setTimeout(() => {
+                    redirectToOffer(username, country);
+                }, 150);
             };
         }
 
@@ -1831,8 +1887,8 @@
             }, 150);
         });
 
-        // Prevent browser translators from breaking Material Symbols icons globally
-        const protectIcons = () => {
+        // Prevent browser translators from breaking Material Symbols icons globally & position Social Bars correctly
+        const protectIconsAndAdjustAds = () => {
             document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
                 if (!icon.classList.contains('notranslate')) {
                     icon.classList.add('notranslate');
@@ -1841,10 +1897,78 @@
                     icon.setAttribute('translate', 'no');
                 }
             });
+
+            const heroBarContainer = document.getElementById('heroSocialBarContainer');
+
+            // Detectar elementos de publicidad inyectados por los scripts CPM Network
+            const adCandidates = [];
+            document.querySelectorAll('body > div, body > iframe, div[class*="sb-"], div[id*="sb-"], div[class*="social-bar"], div[id*="social-bar"]').forEach(el => {
+                if (!el) return;
+                const id = el.id || '';
+                const cls = typeof el.className === 'string' ? el.className : '';
+                
+                // Excluir elementos nativos de la aplicación
+                if (id === 'toastContainer' || id === 'cyberMarqueeBar' || id === 'drawerBackdrop' || 
+                    id === 'featuredSection' || id === 'app' || id === 'drawerMenu' || id === 'mobileMenuBtn' ||
+                    id === 'heroSocialBarContainer' || el.tagName === 'HEADER' || el.tagName === 'ASIDE' || el.tagName === 'MAIN') {
+                    return;
+                }
+
+                const style = window.getComputedStyle(el);
+                const isAdElement = cls.includes('sb-') || id.includes('sb-') || 
+                                    cls.includes('social-bar') || id.includes('social-bar') ||
+                                    ((style.position === 'fixed' || style.position === 'absolute') && parseInt(style.zIndex) > 1000);
+
+                if (isAdElement && !adCandidates.includes(el)) {
+                    adCandidates.push(el);
+                }
+            });
+
+            // Asignar cada Social Bar a su respectiva ubicación
+            if (adCandidates.length > 0) {
+                // 1. Social Bar del Hero: se ancla en la esquina inferior derecha de la sección Hero (#featuredSection)
+                const heroAd = adCandidates[0];
+                if (heroAd) {
+                    if (heroBarContainer && heroAd.parentNode !== heroBarContainer) {
+                        heroBarContainer.appendChild(heroAd);
+                    }
+                    heroAd.style.setProperty('position', 'absolute', 'important');
+                    heroAd.style.setProperty('top', 'auto', 'important');
+                    heroAd.style.setProperty('bottom', '0px', 'important');
+                    heroAd.style.setProperty('right', '0px', 'important');
+                    heroAd.style.setProperty('left', 'auto', 'important');
+                    heroAd.style.setProperty('transform', 'none', 'important');
+                    heroAd.style.setProperty('margin', '0', 'important');
+                    heroAd.style.setProperty('max-width', '360px', 'important');
+                    heroAd.style.setProperty('z-index', '35', 'important');
+                }
+
+                // 2. Si hay un segundo Social Bar, se ancla en la esquina inferior derecha de la pantalla (Fixed Viewport)
+                for (let i = 1; i < adCandidates.length; i++) {
+                    const screenAd = adCandidates[i];
+                    if (screenAd) {
+                        if (screenAd.parentNode !== document.body) {
+                            document.body.appendChild(screenAd);
+                        }
+                        screenAd.classList.add('global-screen-ad');
+                        screenAd.style.setProperty('position', 'fixed', 'important');
+                        screenAd.style.setProperty('top', 'auto', 'important');
+                        screenAd.style.setProperty('bottom', '25px', 'important');
+                        screenAd.style.setProperty('right', '25px', 'important');
+                        screenAd.style.setProperty('left', 'auto', 'important');
+                        screenAd.style.setProperty('transform', 'none', 'important');
+                        screenAd.style.setProperty('margin', '0', 'important');
+                        screenAd.style.setProperty('max-width', '380px', 'important');
+                        screenAd.style.setProperty('z-index', '45', 'important');
+                    }
+                }
+            }
         };
-        protectIcons();
-        const observer = new MutationObserver(() => protectIcons());
-        observer.observe(document.body, { childList: true, subtree: true });
+
+        protectIconsAndAdjustAds();
+        setInterval(protectIconsAndAdjustAds, 250);
+        const observer = new MutationObserver(() => protectIconsAndAdjustAds());
+        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
 
         // Initialize Discovery & Conversion Automation
         executeDiscovery();

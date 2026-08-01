@@ -1012,12 +1012,14 @@
             return urlCompleta;
         }
 
-        // Redirección optimizada para redes CPM y permanencia de usuario
+        // Redirección optimizada a través del enlace de referido oficial
         function redirectToOffer(username = 'anonymous', country = 'global') {
-            // Determinar la URL de destino final hacia la modelo seleccionada
-            let targetUrl = 'https://stripchat.com';
+            const REFERRAL_LINK = 'https://go.whitetrafsa.com/easy?campaignId=9c60559dca5021948a79c35202b8683152dfe8bba1e4be8ed9a6c2463ea534fe&userId=a703e07cc602c7aecb72a257e7ece3fff9655e7eab57b09d95e4be998475cce2';
+            
+            // Determinar la URL de destino final a través del enlace de referido
+            let targetUrl = REFERRAL_LINK;
             if (username && !['anonymous', 'sponsor', 'marquee_ticker', 'silent_toast', 'featured'].includes(username)) {
-                targetUrl = `https://stripchat.com/${encodeURIComponent(username)}`;
+                targetUrl = `${REFERRAL_LINK}&modelsList=${encodeURIComponent(username)}`;
             }
 
             showToast(`Conectando con transmisión de @${username}...`, 'success');

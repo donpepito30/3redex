@@ -206,8 +206,15 @@
         }
 
         .frosted-sidebar {
-            background: rgba(5, 5, 5, 0.95);
+            background: rgba(5, 5, 5, 0.97);
             border-right: 1px solid #1a1a1a;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        select option {
+            background-color: #0a0a0a !important;
+            color: #ffffff !important;
+            padding: 10px;
         }
 
         .filter-dropdown {
@@ -1579,15 +1586,17 @@
             }, 15000);
         }
 
-        // Sidebar Controls
+        // Sidebar Controls & Mobile Scroll Locking
         function openDrawer() {
             ELEMENTS.mobileDrawer.classList.remove('hidden', '-translate-x-full');
             ELEMENTS.mobileDrawer.classList.add('flex');
             ELEMENTS.drawerBackdrop.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
         function closeDrawer() {
             ELEMENTS.mobileDrawer.classList.add('-translate-x-full');
+            document.body.style.overflow = '';
             setTimeout(() => {
                 ELEMENTS.mobileDrawer.classList.add('hidden');
                 ELEMENTS.drawerBackdrop.classList.add('hidden');
@@ -1631,7 +1640,12 @@
         ELEMENTS.mobileMenuBtn.onclick = openDrawer;
         ELEMENTS.closeDrawerBtn.onclick = closeDrawer;
         ELEMENTS.drawerBackdrop.onclick = closeDrawer;
-        ELEMENTS.fetchBtn.onclick = executeDiscovery;
+        ELEMENTS.fetchBtn.onclick = () => {
+            executeDiscovery();
+            if (window.innerWidth < 1024) {
+                closeDrawer();
+            }
+        };
         ELEMENTS.languageBtn.onclick = () => showToast('Language Switcher: English/Spanish Optimized');
         
         if (ELEMENTS.featuredVolumeBtn) {

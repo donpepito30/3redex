@@ -11,8 +11,6 @@
     <link rel="preconnect" href="https://www.effectivecpmnetwork.com" crossorigin />
     <link rel="dns-prefetch" href="https://pl30502956.effectivecpmnetwork.com" />
     <link rel="dns-prefetch" href="https://pl30502957.effectivecpmnetwork.com" />
-    <!-- Social Bar Ad Script -->
-    <script src="https://pl30502957.effectivecpmnetwork.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js"></script>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
@@ -1949,7 +1947,7 @@
             });
         };
 
-        // Prevent browser translators from breaking Material Symbols icons globally & position Social Bars correctly
+        // Prevent browser translators from breaking Material Symbols icons globally & eliminate top Social Bar ads
         const protectIconsAndAdjustAds = () => {
             document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
                 if (!icon.classList.contains('notranslate')) {
@@ -1963,7 +1961,25 @@
             const heroBarContainer = document.getElementById('heroSocialBarContainer');
             const knownAppIds = new Set(['app', 'toastContainer', 'cyberMarqueeBar', 'drawerBackdrop', 'mobileDrawer', 'drawerMenu', 'mobileMenuBtn', 'featuredSection', 'debugUrl', 'heroSocialBarContainer']);
 
-            // Find all ad elements injected dynamically into document.body
+            // Scan and immediately remove any floating ad/popup positioned in the top portion of the screen
+            const allNodes = document.querySelectorAll('body > div, body > iframe, [style*="position: fixed"], [style*="position:fixed"], [style*="position: absolute"], [style*="position:absolute"]');
+            allNodes.forEach(node => {
+                if (!node || knownAppIds.has(node.id) || node.closest('#app') || node.closest('#toastContainer') || node.closest('header')) return;
+                
+                const style = window.getComputedStyle(node);
+                const rect = node.getBoundingClientRect();
+
+                // If element is fixed/absolute at the top of the screen (e.g. top < 120px) and not our hero container, remove it
+                if ((style.position === 'fixed' || style.position === 'absolute') && rect.top >= 0 && rect.top < 140 && rect.height > 20 && !node.closest('#heroSocialBarContainer')) {
+                    try {
+                        node.remove();
+                    } catch (e) {
+                        node.style.setProperty('display', 'none', 'important');
+                    }
+                }
+            });
+
+            // Find all remaining ad elements injected dynamically into document.body
             const adCandidates = [];
             Array.from(document.body.children).forEach(el => {
                 if (!el || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'HEADER' || el.tagName === 'MAIN' || el.tagName === 'ASIDE') return;

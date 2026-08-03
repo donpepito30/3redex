@@ -211,6 +211,31 @@
             -webkit-overflow-scrolling: touch;
         }
 
+        .global-screen-ad {
+            position: fixed !important;
+            bottom: 20px !important;
+            right: 20px !important;
+            top: auto !important;
+            left: auto !important;
+            transform: none !important;
+            margin: 0 !important;
+            max-width: min(360px, calc(100vw - 24px)) !important;
+            z-index: 40 !important;
+            transition: opacity 0.2s ease !important;
+        }
+
+        @media (max-width: 640px) {
+            .global-screen-ad {
+                bottom: 12px !important;
+                right: 12px !important;
+            }
+        }
+
+        body.drawer-open .global-screen-ad {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
+
         select option {
             background-color: #0a0a0a !important;
             color: #ffffff !important;
@@ -1592,11 +1617,13 @@
             ELEMENTS.mobileDrawer.classList.add('flex');
             ELEMENTS.drawerBackdrop.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
+            document.body.classList.add('drawer-open');
         }
 
         function closeDrawer() {
             ELEMENTS.mobileDrawer.classList.add('-translate-x-full');
             document.body.style.overflow = '';
+            document.body.classList.remove('drawer-open');
             setTimeout(() => {
                 ELEMENTS.mobileDrawer.classList.add('hidden');
                 ELEMENTS.drawerBackdrop.classList.add('hidden');
@@ -1932,102 +1959,55 @@
             }, 150);
         });
 
-        // Helper function to enforce positioning on ad containers AND all nested positioned popups
-        const applyAdContainerStyle = (el, posType, bottomVal, rightVal, zIdx) => {
-            if (!el || !el.style) return;
+        // Prevent browser translators from breaking Material Symbols icons globally & tag Social Bar ads cleanly
+        const knownAppIds = new Set(['app', 'toastContainer', 'cyberMarqueeBar', 'drawerBackdrop', 'mobileDrawer', 'drawerMenu', 'mobileMenuBtn', 'featuredSection', 'debugUrl', 'heroSocialBarContainer']);
 
-            const isDrawerOpen = document.body.style.overflow === 'hidden';
-
-            const applyStylesToNode = (node, isOuter) => {
-                if (!node || !node.style) return;
-                node.style.setProperty('position', isOuter ? posType : (node.style.position === 'fixed' || node.style.position === 'absolute' ? posType : node.style.position), 'important');
-                node.style.setProperty('top', 'auto', 'important');
-                node.style.setProperty('bottom', isOuter ? bottomVal : '0px', 'important');
-                node.style.setProperty('right', isOuter ? rightVal : '0px', 'important');
-                node.style.setProperty('left', 'auto', 'important');
-                node.style.setProperty('transform', 'none', 'important');
-                node.style.setProperty('margin', '0', 'important');
-                node.style.setProperty('max-width', 'min(360px, calc(100vw - 24px))', 'important');
-                
-                if (isDrawerOpen) {
-                    node.style.setProperty('opacity', '0', 'important');
-                    node.style.setProperty('pointer-events', 'none', 'important');
-                } else {
-                    node.style.setProperty('opacity', '1', 'important');
-                    node.style.setProperty('pointer-events', 'auto', 'important');
-                }
-
-                if (zIdx) node.style.setProperty('z-index', zIdx, 'important');
-            };
-
-            applyStylesToNode(el, true);
-
-            // Restringir cualquier div o popup interno con posición fixed/absolute para que no salte hacia la parte superior
-            const children = el.querySelectorAll('*');
-            children.forEach(child => {
-                const computed = window.getComputedStyle(child);
-                if (computed.position === 'fixed' || computed.position === 'absolute' || child.style.top || child.style.position) {
-                    applyStylesToNode(child, false);
-                }
-            });
-        };
-
-        // Prevent browser translators from breaking Material Symbols icons globally & position Social Bar ads professionally
-        const protectIconsAndAdjustAds = () => {
-            document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
-                if (!icon.classList.contains('notranslate')) {
-                    icon.classList.add('notranslate');
-                }
-                if (icon.getAttribute('translate') !== 'no') {
-                    icon.setAttribute('translate', 'no');
-                }
-            });
-
-            const heroBarContainer = document.getElementById('heroSocialBarContainer');
-            const knownAppIds = new Set(['app', 'toastContainer', 'cyberMarqueeBar', 'drawerBackdrop', 'mobileDrawer', 'drawerMenu', 'mobileMenuBtn', 'featuredSection', 'debugUrl', 'heroSocialBarContainer']);
-
-            // Find all ad elements injected dynamically into document.body
-            const adCandidates = [];
-            Array.from(document.body.children).forEach(el => {
-                if (!el || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'HEADER' || el.tagName === 'MAIN' || el.tagName === 'ASIDE') return;
-                if (knownAppIds.has(el.id)) return;
-                
-                adCandidates.push(el);
-            });
-
-            // Also check for any standalone fixed/absolute popups injected into body by Social Bar scripts
-            const floatingNodes = document.querySelectorAll('body > div, body > iframe, [style*="position: fixed"], [style*="position:fixed"]');
-            floatingNodes.forEach(node => {
-                if (!node || knownAppIds.has(node.id) || node.closest('#app') || node.closest('#toastContainer') || node.closest('header') || node.closest('#mobileDrawer')) return;
-                if (!adCandidates.includes(node) && node !== heroBarContainer) {
-                    adCandidates.push(node);
-                }
-            });
-
-            // Assign detected Social Bar ads cleanly to bottom-right position
-            const isMobile = window.innerWidth <= 640;
-            const bottomPos = isMobile ? '12px' : '20px';
-            const rightPos = isMobile ? '12px' : '20px';
-
-            adCandidates.forEach(screenAd => {
-                if (screenAd && screenAd.parentNode) {
-                    screenAd.classList.add('global-screen-ad');
-                    applyAdContainerStyle(screenAd, 'fixed', bottomPos, rightPos, '40');
-                }
-            });
-
-            // Format ads inside heroBarContainer if present
-            if (heroBarContainer && heroBarContainer.children.length > 0) {
-                Array.from(heroBarContainer.children).forEach(child => {
-                    applyAdContainerStyle(child, 'absolute', '0px', '0px', '35');
+        let isTaggingAds = false;
+        const protectIconsAndTagAds = () => {
+            if (isTaggingAds) return;
+            isTaggingAds = true;
+            try {
+                document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
+                    if (!icon.classList.contains('notranslate')) {
+                        icon.classList.add('notranslate');
+                    }
+                    if (icon.getAttribute('translate') !== 'no') {
+                        icon.setAttribute('translate', 'no');
+                    }
                 });
+
+                // Tag dynamically injected ad containers in body
+                Array.from(document.body.children).forEach(el => {
+                    if (!el || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'HEADER' || el.tagName === 'MAIN' || el.tagName === 'ASIDE') return;
+                    if (knownAppIds.has(el.id)) return;
+                    
+                    if (!el.classList.contains('global-screen-ad')) {
+                        el.classList.add('global-screen-ad');
+                    }
+                });
+            } catch (err) {
+                console.log("[Ad Tagging Warning]", err);
+            } finally {
+                isTaggingAds = false;
             }
         };
 
-        protectIconsAndAdjustAds();
-        setInterval(protectIconsAndAdjustAds, 250);
-        const observer = new MutationObserver(() => protectIconsAndAdjustAds());
-        observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+        protectIconsAndTagAds();
+        setInterval(protectIconsAndTagAds, 1000);
+
+        const observer = new MutationObserver((mutations) => {
+            let hasNewNodes = false;
+            for (const m of mutations) {
+                if (m.addedNodes.length > 0) {
+                    hasNewNodes = true;
+                    break;
+                }
+            }
+            if (hasNewNodes) {
+                protectIconsAndTagAds();
+            }
+        });
+        observer.observe(document.body, { childList: true });
 
         // Initialize Discovery & Conversion Automation
         executeDiscovery();

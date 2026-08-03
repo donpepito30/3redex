@@ -1936,6 +1936,8 @@
         const applyAdContainerStyle = (el, posType, bottomVal, rightVal, zIdx) => {
             if (!el || !el.style) return;
 
+            const isDrawerOpen = document.body.style.overflow === 'hidden';
+
             const applyStylesToNode = (node, isOuter) => {
                 if (!node || !node.style) return;
                 node.style.setProperty('position', isOuter ? posType : (node.style.position === 'fixed' || node.style.position === 'absolute' ? posType : node.style.position), 'important');
@@ -1946,6 +1948,15 @@
                 node.style.setProperty('transform', 'none', 'important');
                 node.style.setProperty('margin', '0', 'important');
                 node.style.setProperty('max-width', 'min(360px, calc(100vw - 24px))', 'important');
+                
+                if (isDrawerOpen) {
+                    node.style.setProperty('opacity', '0', 'important');
+                    node.style.setProperty('pointer-events', 'none', 'important');
+                } else {
+                    node.style.setProperty('opacity', '1', 'important');
+                    node.style.setProperty('pointer-events', 'auto', 'important');
+                }
+
                 if (zIdx) node.style.setProperty('z-index', zIdx, 'important');
             };
 
@@ -1961,7 +1972,7 @@
             });
         };
 
-        // Prevent browser translators from breaking Material Symbols icons globally & eliminate top Social Bar ads
+        // Prevent browser translators from breaking Material Symbols icons globally & position Social Bar ads professionally
         const protectIconsAndAdjustAds = () => {
             document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
                 if (!icon.classList.contains('notranslate')) {
@@ -1975,25 +1986,7 @@
             const heroBarContainer = document.getElementById('heroSocialBarContainer');
             const knownAppIds = new Set(['app', 'toastContainer', 'cyberMarqueeBar', 'drawerBackdrop', 'mobileDrawer', 'drawerMenu', 'mobileMenuBtn', 'featuredSection', 'debugUrl', 'heroSocialBarContainer']);
 
-            // Scan and immediately remove any floating ad/popup positioned in the top portion of the screen
-            const allNodes = document.querySelectorAll('body > div, body > iframe, [style*="position: fixed"], [style*="position:fixed"], [style*="position: absolute"], [style*="position:absolute"]');
-            allNodes.forEach(node => {
-                if (!node || knownAppIds.has(node.id) || node.closest('#app') || node.closest('#toastContainer') || node.closest('header')) return;
-                
-                const style = window.getComputedStyle(node);
-                const rect = node.getBoundingClientRect();
-
-                // If element is fixed/absolute at the top of the screen (e.g. top < 120px) and not our hero container, remove it
-                if ((style.position === 'fixed' || style.position === 'absolute') && rect.top >= 0 && rect.top < 140 && rect.height > 20 && !node.closest('#heroSocialBarContainer')) {
-                    try {
-                        node.remove();
-                    } catch (e) {
-                        node.style.setProperty('display', 'none', 'important');
-                    }
-                }
-            });
-
-            // Find all remaining ad elements injected dynamically into document.body
+            // Find all ad elements injected dynamically into document.body
             const adCandidates = [];
             Array.from(document.body.children).forEach(el => {
                 if (!el || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'HEADER' || el.tagName === 'MAIN' || el.tagName === 'ASIDE') return;
@@ -2002,36 +1995,32 @@
                 adCandidates.push(el);
             });
 
-            // Also check if elements are inside heroBarContainer
+            // Also check for any standalone fixed/absolute popups injected into body by Social Bar scripts
+            const floatingNodes = document.querySelectorAll('body > div, body > iframe, [style*="position: fixed"], [style*="position:fixed"]');
+            floatingNodes.forEach(node => {
+                if (!node || knownAppIds.has(node.id) || node.closest('#app') || node.closest('#toastContainer') || node.closest('header') || node.closest('#mobileDrawer')) return;
+                if (!adCandidates.includes(node) && node !== heroBarContainer) {
+                    adCandidates.push(node);
+                }
+            });
+
+            // Assign detected Social Bar ads cleanly to bottom-right position
+            const isMobile = window.innerWidth <= 640;
+            const bottomPos = isMobile ? '12px' : '20px';
+            const rightPos = isMobile ? '12px' : '20px';
+
+            adCandidates.forEach(screenAd => {
+                if (screenAd && screenAd.parentNode) {
+                    screenAd.classList.add('global-screen-ad');
+                    applyAdContainerStyle(screenAd, 'fixed', bottomPos, rightPos, '40');
+                }
+            });
+
+            // Format ads inside heroBarContainer if present
             if (heroBarContainer && heroBarContainer.children.length > 0) {
                 Array.from(heroBarContainer.children).forEach(child => {
                     applyAdContainerStyle(child, 'absolute', '0px', '0px', '35');
                 });
-            }
-
-            // Assign detected ads to their target containers
-            if (adCandidates.length > 0) {
-                // 1. Social Bar for Hero: move inside #heroSocialBarContainer in bottom-right of Hero
-                const heroAd = adCandidates[0];
-                if (heroAd && heroBarContainer) {
-                    if (heroAd.parentNode !== heroBarContainer) {
-                        heroBarContainer.appendChild(heroAd);
-                    }
-                    applyAdContainerStyle(heroAd, 'absolute', '0px', '0px', '35');
-                }
-
-                // 2. Second Social Bar (if any): keep at bottom-right of viewport
-                for (let i = 1; i < adCandidates.length; i++) {
-                    const screenAd = adCandidates[i];
-                    if (screenAd) {
-                        if (screenAd.parentNode !== document.body) {
-                            document.body.appendChild(screenAd);
-                        }
-                        screenAd.classList.add('global-screen-ad');
-                        const isMobile = window.innerWidth <= 640;
-                        applyAdContainerStyle(screenAd, 'fixed', isMobile ? '12px' : '20px', isMobile ? '12px' : '20px', '40');
-                    }
-                }
             }
         };
 

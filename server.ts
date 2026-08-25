@@ -129,9 +129,16 @@ app.get("/api/models/:type?", rateLimiter, async (req, res) => {
     console.log(`[Discovery Proxy] Synchronizing Target: ${targetUrl}`);
 
     const data = await withRetry(async () => {
-      const response = await fetch(targetUrl);
-      if (!response.ok) throw new Error(`API Status ${response.status}`);
-      return response.json();
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout for connection stability
+      
+      try {
+        const response = await fetch(targetUrl, { signal: controller.signal });
+        if (!response.ok) throw new Error(`API Status ${response.status}`);
+        return await response.json();
+      } finally {
+        clearTimeout(timeoutId);
+      }
     });
 
     res.json(data);

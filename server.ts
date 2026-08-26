@@ -130,10 +130,18 @@ app.get("/api/models/:type?", rateLimiter, async (req, res) => {
 
     const data = await withRetry(async () => {
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout for connection stability
+      const timeoutId = setTimeout(() => controller.abort(), 6000); // 6 second timeout for connection stability
       
       try {
-        const response = await fetch(targetUrl, { signal: controller.signal });
+        const response = await fetch(targetUrl, { 
+          signal: controller.signal,
+          headers: {
+            "Accept": "application/json, text/plain, */*",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "Referer": "https://go.whitetrafsa.com/",
+            "Origin": "https://go.whitetrafsa.com"
+          }
+        });
         if (!response.ok) throw new Error(`API Status ${response.status}`);
         return await response.json();
       } finally {
@@ -141,6 +149,8 @@ app.get("/api/models/:type?", rateLimiter, async (req, res) => {
       }
     });
 
+    res.setHeader("Cache-Control", "public, max-age=45, s-maxage=90, stale-while-revalidate=180");
+    res.setHeader("Access-Control-Allow-Origin", "*");
     res.json(data);
   } catch (error) {
     console.log(`[Proxy Link Error] Recovery triggered. Reason: ${error instanceof Error ? error.message : "Network failure"}`);

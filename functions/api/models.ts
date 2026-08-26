@@ -2,10 +2,10 @@ interface Env {
   // Add any environment variables if needed
 }
 
-// In-memory rate limiting map (reinitialized per isolate, perfect for basic Edge protection)
+// In-memory rate limiting map with high-capacity limits for multi-user mobile IPs
 const rateLimitMap = new Map<string, { count: number; lastReset: number }>();
 const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
-const MAX_REQUESTS_PER_WINDOW = 30;
+const MAX_REQUESTS_PER_WINDOW = 120;
 
 function rateLimiter(ip: string): boolean {
   const now = Date.now();
@@ -22,14 +22,25 @@ function rateLimiter(ip: string): boolean {
   return userData.count <= MAX_REQUESTS_PER_WINDOW;
 }
 
-// Retry Logic
-async function withRetry<T>(fn: () => Promise<T>, retries = 3, delay = 1000): Promise<T> {
+// Fast Timeout-Bound Fetcher
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 5000): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+// Resilient Retry Logic with Rapid Failover
+async function withRetry<T>(fn: () => Promise<T>, retries = 2, delay = 400): Promise<T> {
   try {
     return await fn();
   } catch (error) {
     if (retries <= 0) throw error;
     await new Promise(resolve => setTimeout(resolve, delay));
-    return withRetry(fn, retries - 1, delay * 2);
+    return withRetry(fn, retries - 1, delay * 1.5);
   }
 }
 
@@ -44,12 +55,12 @@ export const onRequest = async (context: any) => {
     });
   }
 
-  // Get client IP safely in Cloudflare (always available in request.headers)
+  // Get client IP safely in Cloudflare
   const ip = request.headers.get("CF-Connecting-IP") || "unknown";
 
   // Apply Rate Limiting
   if (!rateLimiter(ip)) {
-    console.log(`[Cloudflare Pages - Rate Limit] Blocked IP: ${ip}`);
+    console.log(`[Cloudflare Pages - Rate Limit] Throttled IP: ${ip}`);
     return new Response(JSON.stringify({ error: "Too many requests. Data access throttled." }), {
       status: 429,
       headers: {
@@ -84,82 +95,59 @@ export const onRequest = async (context: any) => {
     const safeKeyRegex = /^[a-zA-Z0-9_\-]+$/;
 
     url.searchParams.forEach((value, key) => {
-      // Prevent parameter injection/pollution by validating query keys
       if (!safeKeyRegex.test(key)) {
-        console.log(`[Cloudflare Pages - Security] Blocked key: "${key}"`);
         return;
       }
-      // Sanitize values to prevent injection patterns or script-like content
       const sanitizedValue = value.replace(/[\langle\rangle"';\\]/g, "");
       queryParams.append(key, sanitizedValue);
     });
 
     const targetUrl = `${baseUrl}?${queryParams.toString()}`;
-    console.log(`[Cloudflare Pages - Proxy] Fetching: ${targetUrl}`);
 
-    // Fetch from target with resilient multi-strategy fallback
+    // Cloudflare Edge Cache check
+    const cacheKey = new Request(targetUrl, { headers: request.headers });
+    let cache: any = null;
+    try {
+      if (typeof caches !== "undefined" && (caches as any).default) {
+        cache = (caches as any).default;
+        const cachedResponse = await cache.match(cacheKey);
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+      }
+    } catch (cacheErr) {
+      // Cache match error ignored, continue to fetch
+    }
+
+    // Fetch from target with fast failover
     const data = await withRetry(async () => {
-      // Strategy 1: Standard plain fetch (matching working Express backend)
+      // Strategy 1: Optimized browser headers with 5s timeout
       try {
-        console.log(`[Cloudflare Proxy] Attempting Strategy 1: Plain Fetch`);
-        const response = await fetch(targetUrl);
-        if (response.ok) {
-          const body = await response.json();
-          console.log(`[Cloudflare Proxy] Strategy 1 succeeded!`);
-          return body;
-        }
-        console.log(`[Cloudflare Proxy] Strategy 1 failed with status: ${response.status}`);
-      } catch (e) {
-        console.log(`[Cloudflare Proxy] Strategy 1 error: ${e instanceof Error ? e.message : e}`);
-      }
-
-      // Strategy 2: Browser User-Agent header fetch (bypasses bot filters without spoofing origin/referrer)
-      try {
-        console.log(`[Cloudflare Proxy] Attempting Strategy 2: Browser User-Agent`);
-        const response = await fetch(targetUrl, {
-          headers: {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Accept": "application/json, text/plain, */*",
-            "Cache-Control": "no-cache"
-          }
-        });
-        if (response.ok) {
-          const body = await response.json();
-          console.log(`[Cloudflare Proxy] Strategy 2 succeeded!`);
-          return body;
-        }
-        console.log(`[Cloudflare Proxy] Strategy 2 failed with status: ${response.status}`);
-      } catch (e) {
-        console.log(`[Cloudflare Proxy] Strategy 2 error: ${e instanceof Error ? e.message : e}`);
-      }
-
-      // Strategy 3: Full-spoof headers
-      try {
-        console.log(`[Cloudflare Proxy] Attempting Strategy 3: Full Spoof Headers`);
-        const response = await fetch(targetUrl, {
+        const response = await fetchWithTimeout(targetUrl, {
           headers: {
             "Accept": "application/json, text/plain, */*",
-            "Accept-Language": "es-ES,es;q=0.9,en;q=0.8,en-US;q=0.7",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
             "Referer": "https://go.whitetrafsa.com/",
-            "Origin": "https://go.whitetrafsa.com",
-            "Cache-Control": "no-cache"
+            "Origin": "https://go.whitetrafsa.com"
           }
-        });
+        }, 5000);
         if (response.ok) {
-          const body = await response.json();
-          console.log(`[Cloudflare Proxy] Strategy 3 succeeded!`);
-          return body;
+          return await response.json();
         }
-        const errBody = await response.text();
-        throw new Error(`API Status ${response.status} - ${errBody.substring(0, 120)}`);
       } catch (e) {
-        throw new Error(`All proxy strategies failed. Last error: ${e instanceof Error ? e.message : e}`);
+        // Fallback to strategy 2
       }
+
+      // Strategy 2: Plain direct fetch with 5s timeout
+      const directResponse = await fetchWithTimeout(targetUrl, {}, 5000);
+      if (!directResponse.ok) {
+        throw new Error(`API Status ${directResponse.status}`);
+      }
+      return await directResponse.json();
     });
 
-    // Build standard secure response
-    return new Response(JSON.stringify(data), {
+    // Build standard secure response with high-performance edge caching
+    const edgeResponse = new Response(JSON.stringify(data), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
@@ -167,9 +155,19 @@ export const onRequest = async (context: any) => {
         "X-Content-Type-Options": "nosniff",
         "X-XSS-Protection": "1; mode=block",
         "Referrer-Policy": "strict-origin-when-cross-origin",
-        "Cache-Control": "public, max-age=15" // Cloudflare Edge micro-caching
+        "Access-Control-Allow-Origin": "*",
+        "Cache-Control": "public, max-age=45, s-maxage=90, stale-while-revalidate=180"
       }
     });
+
+    // Store in Cloudflare Edge Cache in background
+    if (cache) {
+      try {
+        context.waitUntil(cache.put(cacheKey, edgeResponse.clone()));
+      } catch (e) {}
+    }
+
+    return edgeResponse;
 
   } catch (error) {
     const errorMsg = error instanceof Error ? error.message : "Network failure";
@@ -184,7 +182,8 @@ export const onRequest = async (context: any) => {
         "X-App-Engine": "REDEX-Central-Core-Edge",
         "X-Content-Type-Options": "nosniff",
         "X-XSS-Protection": "1; mode=block",
-        "Referrer-Policy": "strict-origin-when-cross-origin"
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Access-Control-Allow-Origin": "*"
       }
     });
   }

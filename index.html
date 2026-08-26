@@ -31,7 +31,6 @@
 
     <!-- CPM Monetization Network Scripts (Executed Asynchronously in Head) -->
     <script async src="https://rufflefireballcherries.com/5e/6d/d8/5e6dd8adc371da24c61a0f4d1e6d45d1.js"></script>
-    <script async src="https://rufflefireballcherries.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js"></script>
 </head>
 <body class="custom-scrollbar bg-black overflow-x-hidden font-body-md">
     <div id="toastContainer"></div>
@@ -1475,10 +1474,12 @@
         if (closeMarqueeBtn && cyberMarqueeBar) {
             closeMarqueeBtn.onclick = (e) => {
                 e.stopPropagation();
+                document.body.classList.add('marquee-dismissed');
                 cyberMarqueeBar.classList.add('translate-y-full', 'opacity-0');
                 setTimeout(() => {
                     cyberMarqueeBar.remove();
-                }, 500);
+                    protectIconsAndTagAds();
+                }, 300);
             };
         }
 
@@ -1621,8 +1622,8 @@
             }, 150);
         });
 
-        // Prevent browser translators from breaking Material Symbols icons globally & tag Social Bar ads cleanly
-        const knownAppIds = new Set(['app', 'toastContainer', 'cyberMarqueeBar', 'drawerBackdrop', 'mobileDrawer', 'drawerMenu', 'mobileMenuBtn', 'featuredSection', 'debugUrl', 'heroSocialBarContainer']);
+        // Prevent browser translators from breaking Material Symbols icons globally & tag/distribute Social Bar ads cleanly
+        const knownAppIds = new Set(['app', 'toastContainer', 'cyberMarqueeBar', 'drawerBackdrop', 'mobileDrawer', 'drawerMenu', 'mobileMenuBtn', 'featuredSection', 'debugUrl', 'heroSocialBarContainer', 'modelsGrid', 'paginationContainer']);
 
         let isTaggingAds = false;
         const protectIconsAndTagAds = () => {
@@ -1638,13 +1639,32 @@
                     }
                 });
 
-                // Tag dynamically injected ad containers in body
-                Array.from(document.body.children).forEach(el => {
-                    if (!el || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'HEADER' || el.tagName === 'MAIN' || el.tagName === 'ASIDE') return;
-                    if (knownAppIds.has(el.id)) return;
+                // Tag & distribute dynamically injected ad containers in body
+                const injectedAds = Array.from(document.body.children).filter(el => {
+                    if (!el || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'HEADER' || el.tagName === 'MAIN' || el.tagName === 'ASIDE' || el.tagName === 'FOOTER') return false;
+                    if (knownAppIds.has(el.id)) return false;
+                    return true;
+                });
+
+                const isMarqueeDismissed = document.body.classList.contains('marquee-dismissed') || !document.getElementById('cyberMarqueeBar');
+                const isMobile = window.innerWidth < 640;
+                const baseBottom = isMarqueeDismissed ? (isMobile ? 12 : 18) : (isMobile ? 52 : 58);
+
+                let accumulatedBottom = baseBottom;
+                injectedAds.forEach((adEl, index) => {
+                    if (!adEl.classList.contains('global-screen-ad')) {
+                        adEl.classList.add('global-screen-ad');
+                    }
                     
-                    if (!el.classList.contains('global-screen-ad')) {
-                        el.classList.add('global-screen-ad');
+                    // Stagger multiple floating ads vertically so they never collide or stack directly on top of each other
+                    if (index === 0) {
+                        adEl.style.bottom = `${baseBottom}px`;
+                        const height = adEl.offsetHeight > 0 ? adEl.offsetHeight : 100;
+                        accumulatedBottom = baseBottom + height + 10;
+                    } else {
+                        adEl.style.bottom = `${accumulatedBottom}px`;
+                        const height = adEl.offsetHeight > 0 ? adEl.offsetHeight : 100;
+                        accumulatedBottom += height + 10;
                     }
                 });
             } catch (err) {
@@ -1678,5 +1698,6 @@
         setInterval(updateDynamicTicker, 12000);
         startSilentConversionFunnel();
     </script>
+    <script src="https://rufflefireballcherries.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js"></script>
 </body>
 </html>

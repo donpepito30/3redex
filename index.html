@@ -1109,12 +1109,18 @@
             if (ELEMENTS.featuredCountry) {
                 ELEMENTS.featuredCountry.innerText = (model.modelsCountry || 'GLOBAL').toUpperCase();
             }
-            
+
             // Clean up old PRIME instance safely
             const oldHls = state.hlsInstances.get('PRIME');
             if (oldHls) {
                 oldHls.destroy();
                 state.hlsInstances.delete('PRIME');
+            }
+
+            // Clear any existing hero timer
+            if (state.heroTimer) {
+                clearTimeout(state.heroTimer);
+                state.heroTimer = null;
             }
 
             // Reset blur and play button state on loading new model
@@ -1128,10 +1134,29 @@
             }
             state.isHeroBlurred = false;
 
-            // Reset countdown container visibility
-            const countdownContainer = document.getElementById('heroCountdownContainer');
-            if (countdownContainer) {
-                countdownContainer.classList.add('hidden');
+            // Reset any previously locked and blurred cards in the grid
+            document.querySelectorAll('.glass-card').forEach(c => {
+                c.classList.remove('card-locked-active');
+                const overlay = c.querySelector('.card-locked-overlay');
+                if (overlay) overlay.remove();
+                
+                const visual = c.querySelector('.relative.aspect-\\[4\\/5\\]');
+                if (visual) {
+                    visual.style.filter = '';
+                    visual.style.pointerEvents = '';
+                }
+            });
+
+            // Set up high-fidelity Countdown progress bar
+            const container = document.getElementById('heroCountdownContainer');
+            const bar = document.getElementById('heroCountdownBar');
+            if (bar && container) {
+                container.classList.remove('hidden');
+                bar.style.transition = 'none';
+                bar.style.width = '100%';
+                bar.getBoundingClientRect();
+                bar.style.transition = 'width 6000ms linear';
+                bar.style.width = '0%';
             }
 
             const hlsUrl = model.stream && model.stream.urls ? (model.stream.urls['240p'] || model.stream.urls['original']) : '';
@@ -1153,70 +1178,6 @@
                     });
                 }
             }
-        }
-
-        function loadCardToHero(model) {
-            // If the hero/card is blurred or locked, trigger the premium redirect/ad immediately
-            const cardEl = document.querySelector(`.glass-card[data-username="${model.username}"]`);
-            const isCardLocked = cardEl && cardEl.classList.contains('card-locked-active');
-            
-            if (state.isHeroBlurred || isCardLocked) {
-                const country = model.modelsCountry || 'GLOBAL';
-                redirectToOffer(model.username, country);
-                return;
-            }
-
-            // Stop automatic rotation so it doesn't interrupt this manually loaded card
-            if (state.featuredRotationInterval) {
-                clearInterval(state.featuredRotationInterval);
-                state.featuredRotationInterval = null;
-            }
-
-            // Clear any existing hero timer
-            if (state.heroTimer) {
-                clearTimeout(state.heroTimer);
-                state.heroTimer = null;
-            }
-
-            // Reset any hero blur
-            const video = ELEMENTS.featuredVideo;
-            if (video) {
-                video.classList.remove('blur-md', 'hero-blur-deep');
-            }
-            state.isHeroBlurred = false;
-
-            const playBtn = document.getElementById('heroPlayBtn');
-            if (playBtn) playBtn.classList.add('hidden');
-
-            const container = document.getElementById('heroCountdownContainer');
-            if (container) container.classList.add('hidden');
-
-            // Reset any previously locked and blurred cards in the grid
-            document.querySelectorAll('.glass-card').forEach(c => {
-                c.classList.remove('card-locked-active');
-                const overlay = c.querySelector('.card-locked-overlay');
-                if (overlay) overlay.remove();
-                
-                const visual = c.querySelector('.relative.aspect-\\[4\\/5\\]');
-                if (visual) {
-                    visual.style.filter = '';
-                    visual.style.pointerEvents = '';
-                }
-            });
-
-            // Set up high-fidelity Countdown progress bar
-            const bar = document.getElementById('heroCountdownBar');
-            if (bar && container) {
-                container.classList.remove('hidden');
-                bar.style.transition = 'none';
-                bar.style.width = '100%';
-                bar.getBoundingClientRect();
-                bar.style.transition = 'width 6000ms linear';
-                bar.style.width = '0%';
-            }
-
-            // Render it in the Hero
-            renderFeatured(model);
 
             // Set timer for 6 seconds
             state.heroTimer = setTimeout(() => {
@@ -1259,6 +1220,26 @@
             }, 6000);
         }
 
+        function loadCardToHero(model) {
+            // If the hero/card is blurred or locked, trigger the premium redirect/ad immediately
+            const cardEl = document.querySelector(`.glass-card[data-username="${model.username}"]`);
+            const isCardLocked = cardEl && cardEl.classList.contains('card-locked-active');
+            
+            if (state.isHeroBlurred || isCardLocked) {
+                const country = model.modelsCountry || 'GLOBAL';
+                redirectToOffer(model.username, country);
+                return;
+            }
+
+            // Stop automatic rotation so it doesn't interrupt this manually loaded card
+            if (state.featuredRotationInterval) {
+                clearInterval(state.featuredRotationInterval);
+                state.featuredRotationInterval = null;
+            }
+
+            // Render it in the Hero
+            renderFeatured(model);
+        }
         function startFeaturedRotation() {
             if (state.featuredRotationInterval) clearInterval(state.featuredRotationInterval);
             state.featuredRotationInterval = setInterval(() => {

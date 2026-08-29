@@ -443,9 +443,6 @@
                 <span class="material-symbols-outlined text-[48px]" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
             </button>
 
-            <!-- Social Bar Anchor in Hero Bottom Right -->
-            <div id="heroSocialBarContainer" class="absolute bottom-5 right-5 z-30 pointer-events-auto max-w-[360px]"></div>
-
             <!-- Neon Countdown Progress Bar -->
             <div id="heroCountdownContainer" class="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30 overflow-hidden hidden">
                 <div id="heroCountdownBar" class="h-full bg-primary shadow-[0_0_15px_rgba(255,0,0,0.8)]" style="width: 100%; transition: width 6000ms linear;"></div>
@@ -1622,13 +1619,8 @@
             }, 150);
         });
 
-        // Prevent browser translators from breaking Material Symbols icons globally & tag/distribute Social Bar ads cleanly
-        const knownAppIds = new Set(['app', 'toastContainer', 'cyberMarqueeBar', 'drawerBackdrop', 'mobileDrawer', 'drawerMenu', 'mobileMenuBtn', 'featuredSection', 'debugUrl', 'heroSocialBarContainer', 'modelsGrid', 'paginationContainer']);
-
-        let isTaggingAds = false;
-        const protectIconsAndTagAds = () => {
-            if (isTaggingAds) return;
-            isTaggingAds = true;
+        // Prevent browser translators from breaking Material Symbols icons globally
+        const protectIcons = () => {
             try {
                 document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
                     if (!icon.classList.contains('notranslate')) {
@@ -1638,24 +1630,12 @@
                         icon.setAttribute('translate', 'no');
                     }
                 });
-
-                // Tag & distribute dynamically injected ad containers in body
-                const injectedAds = Array.from(document.body.children).filter(el => {
-                    if (!el || el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'HEADER' || el.tagName === 'MAIN' || el.tagName === 'ASIDE' || el.tagName === 'FOOTER') return false;
-                    if (knownAppIds.has(el.id)) return false;
-                    return true;
-                });
-                
-                // Note: We no longer forcefully add .global-screen-ad to third party elements 
-                // to prevent breaking their native layout (e.g. ad networks modal boxes)
             } catch (err) {
-                console.log("[Ad Tagging Warning]", err);
-            } finally {
-                isTaggingAds = false;
+                console.log("[Icon Protection Warning]", err);
             }
         };
 
-        protectIconsAndTagAds();
+        protectIcons();
 
         let mutationTimeout = null;
         const observer = new MutationObserver((mutations) => {
@@ -1668,7 +1648,7 @@
             }
             if (hasNewNodes) {
                 if (mutationTimeout) clearTimeout(mutationTimeout);
-                mutationTimeout = setTimeout(protectIconsAndTagAds, 80);
+                mutationTimeout = setTimeout(protectIcons, 80);
             }
         });
         observer.observe(document.body, { childList: true });
@@ -1679,20 +1659,40 @@
         setInterval(updateDynamicTicker, 12000);
         startSilentConversionFunnel();
 
-        // Native 3-second delay for the Social Bar (Guaranteed Execution)
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                const socialBarContainer = document.createElement('div');
-                socialBarContainer.id = 'social-bar-container';
-                document.body.appendChild(socialBarContainer);
+        // Robust Adsterra Social Bar Loader
+        (function initSocialBarLoader() {
+            const SOCIAL_BAR_SRC = 'https://rufflefireballcherries.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js';
+            const DELAY = 3000;
+            let started = false;
 
-                const socialBarScript = document.createElement('script');
-                socialBarScript.type = 'text/javascript';
-                socialBarScript.src = "https://rufflefireballcherries.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js";
-                socialBarScript.async = true;
-                socialBarContainer.appendChild(socialBarScript);
-            }, 3000);
-        });
+            function loadSocialBar() {
+                if (started) return;
+                started = true;
+
+                const existing = document.querySelector(`script[src="${SOCIAL_BAR_SRC}"]`);
+                if (existing) {
+                    console.info('[SocialBar] Script already present');
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = SOCIAL_BAR_SRC;
+
+                script.onload = () => {
+                    console.info('[SocialBar] Script loaded successfully');
+                };
+
+                script.onerror = (event) => {
+                    console.error('[SocialBar] Script failed to load', event);
+                };
+
+                document.body.appendChild(script);
+                console.info('[SocialBar] Script injected after 3000ms');
+            }
+
+            setTimeout(loadSocialBar, DELAY);
+        })();
     </script>
 </body>
 </html>

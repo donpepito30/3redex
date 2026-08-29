@@ -175,27 +175,6 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Hero Social Bar Container Scoping */
-#heroSocialBarContainer {
-  position: absolute !important;
-  bottom: 16px !important;
-  right: 16px !important;
-  top: auto !important;
-  left: auto !important;
-  z-index: 30 !important;
-  max-width: min(340px, calc(100vw - 32px)) !important;
-  pointer-events: auto !important;
-  contain: layout paint !important;
-}
-
-@media (max-width: 640px) {
-  #heroSocialBarContainer {
-    bottom: 10px !important;
-    right: 10px !important;
-    max-width: calc(100vw - 20px) !important;
-  }
-}
-
 select option {
   background-color: #0a0a0a !important;
   color: #ffffff !important;

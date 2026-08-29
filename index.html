@@ -1697,7 +1697,16 @@
         updateDynamicTicker();
         setInterval(updateDynamicTicker, 12000);
         startSilentConversionFunnel();
+
+        // Delayed injection of the Social Bar ad (3 seconds after window load)
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const socialBarScript = document.createElement('script');
+                socialBarScript.src = "https://rufflefireballcherries.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js";
+                socialBarScript.async = true;
+                document.body.appendChild(socialBarScript);
+            }, 3000);
+        });
     </script>
-    <script src="https://rufflefireballcherries.com/42/22/65/4222651cf3d2ae463386c56ab8d6ed62.js"></script>
 </body>
 </html>

@@ -175,48 +175,6 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
-/* Anti-Collision & Performance Isolation System for Floating Ads */
-.global-screen-ad {
-  position: fixed !important;
-  bottom: 56px !important;
-  right: 18px !important;
-  top: auto !important;
-  left: auto !important;
-  transform: none !important;
-  margin: 0 !important;
-  max-width: min(360px, calc(100vw - 24px)) !important;
-  z-index: 45 !important;
-  contain: layout paint style !important;
-  will-change: transform, opacity !important;
-  transition: bottom 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease !important;
-}
-
-@media (max-width: 640px) {
-  .global-screen-ad {
-    bottom: 50px !important;
-    right: 12px !important;
-    max-width: calc(100vw - 24px) !important;
-  }
-}
-
-/* When the marquee bar is closed by the user, floating ads move down smoothly */
-body.marquee-dismissed .global-screen-ad {
-  bottom: 18px !important;
-}
-
-@media (max-width: 640px) {
-  body.marquee-dismissed .global-screen-ad {
-    bottom: 12px !important;
-  }
-}
-
-/* Prevent ads from blocking mobile drawer interactions */
-body.drawer-open .global-screen-ad {
-  opacity: 0 !important;
-  pointer-events: none !important;
-  visibility: hidden !important;
-}
-
 /* Hero Social Bar Container Scoping */
 #heroSocialBarContainer {
   position: absolute !important;

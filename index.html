@@ -2,9 +2,70 @@
 <html class="dark" lang="en">
 <head>
     <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>REDEX - Real-Time Live Streaming & Webcam Discovery Platform</title>
+    <meta name="description" content="REDEX is a high-performance real-time analytics and webcam discovery platform. Sync with global feeds, filter top live models, and view live statistics with elite analysis."/>
+    <meta name="keywords" content="REDEX, MatchIntel, live streaming analytics, webcam discovery platform, live models database, real-time stream tracking, webcam search engine, models indexer, 실시간 여캠, BJ 스트리밍, 라이브 캠 분석"/>
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"/>
+    <link rel="canonical" href="https://redexx.hub69.workers.dev/"/>
+    
+    <!-- Multi-Regional and Multilingual Targeting SEO (hreflang) -->
+    <link rel="alternate" hreflang="x-default" href="https://redexx.hub69.workers.dev/" />
+    <link rel="alternate" hreflang="en" href="https://redexx.hub69.workers.dev/" />
+    <link rel="alternate" hreflang="ko" href="https://redexx.hub69.workers.dev/?lang=ko" />
+    <link rel="alternate" hreflang="es" href="https://redexx.hub69.workers.dev/?lang=es" />
+    
+    <!-- Adult Content Classification (SafeSearch & Global Compliance) -->
+    <meta name="rating" content="adult"/>
+    <meta name="rating" content="RTA-5042-1996-1400-1577-RTA"/>
+    
+    <!-- Verification Tags -->
+    <meta name="google-site-verification" content="8F03JA6" />
     <meta name="site-verification" content="8F03JA6" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>REDEX | Nodes</title>
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="https://redexx.hub69.workers.dev/"/>
+    <meta property="og:title" content="REDEX - Real-Time Live Streaming & Webcam Discovery Platform"/>
+    <meta property="og:description" content="REDEX is a high-performance real-time analytics and webcam discovery platform. Sync with global feeds, filter top live models, and view live statistics with elite analysis."/>
+    <meta property="og:image" content="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
+    <meta property="og:site_name" content="REDEX"/>
+    <meta property="og:locale" content="en_US"/>
+    <meta property="og:locale:alternate" content="ko_KR"/>
+    <meta property="og:locale:alternate" content="es_ES"/>
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image"/>
+    <meta property="twitter:url" content="https://redexx.hub69.workers.dev/"/>
+    <meta property="twitter:title" content="REDEX - Real-Time Live Streaming & Webcam Discovery Platform"/>
+    <meta property="twitter:description" content="REDEX is a high-performance real-time analytics and webcam discovery platform. Sync with global feeds, filter top live models, and view live statistics with elite analysis."/>
+    <meta property="twitter:image" content="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
+
+    <!-- Schema.org JSON-LD Structured Data for Google Indexation -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "REDEX",
+      "alternateName": "REDEX MatchIntel Elite",
+      "url": "https://redexx.hub69.workers.dev/",
+      "description": "High-performance real-time analytics and discovery platform for live webcam streams.",
+      "applicationCategory": "EntertainmentApplication",
+      "operatingSystem": "All",
+      "inLanguage": ["en", "ko", "es"],
+      "browserRequirements": "Requires HTML5, Javascript, and HLS support.",
+      "logo": "https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png",
+      "screenshot": "https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png",
+      "creator": {
+        "@type": "Organization",
+        "name": "REDEX Group"
+      }
+    }
+    </script>
+
+    <!-- Icons & Favicons -->
     <link rel="icon" type="image/png" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
     <link rel="shortcut icon" type="image/png" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
     <link rel="apple-touch-icon" href="https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png"/>
@@ -508,8 +569,187 @@
             featuredRotationInterval: null,
             audioEnabled: false,
             heroTimer: null,
-            isHeroBlurred: false
+            isHeroBlurred: false,
+            lang: 'en'
         };
+
+        // Multilingual SEO Localization Dictionary (Targeting Korea, US, UK, and Global Markets)
+        const TRANSLATIONS = {
+            en: {
+                discoverFeed: "Discover Feed",
+                contentConfig: "Content Configuration",
+                categories: "Categories",
+                pageLimit: "Page Limit",
+                filterMode: "Filter Mode",
+                allPriority: "ALL (PRIORITY)",
+                exactOnly: "EXACT (FILTER ONLY)",
+                prioritizeModels: "Prioritize Models",
+                excludeModels: "Exclude Models",
+                profilePreferences: "Profile Preferences",
+                precisionQuality: "Precision Quality",
+                advancedFilters: "ADVANCED FILTERS",
+                specifics: "Details (Specifics)",
+                hairEyes: "Hair / Eyes Color",
+                sponsorLabel: "SPONSOR LINK",
+                sponsorDesc: "Direct Node Sync",
+                sponsorButton: "CONNECT VIP NODE",
+                searchDatabase: "SEARCH REDEX DATABASE...",
+                globalSearch: "GLOBAL SEARCH...",
+                executeDiscovery: "Execute Discovery",
+                clearIntel: "Clear Intel",
+                dataSynced: "REDEX Live Nodes Connected Successfully",
+                langSwitched: "Language Switched to English (US/UK Optimized)",
+                noResults: "No live feeds found matching criteria",
+                loadingIntel: "Loading Real-Time Feeds...",
+                nodeUnlock: "Unlock VIP Node",
+                networkAlert: "Network Seismic Alert",
+                tickerText: "⚡ RESTRICTIONS REMOVED WITH REDEX! • ULTRA-SMOOTH HD STREAMING UNLIMITED • CLICK HERE FOR 50% VIP SERVER DISCOUNT • INSTANT HIGH-SPEED NODE CONNECTION • ⚡"
+            },
+            ko: {
+                discoverFeed: "피드 탐색",
+                contentConfig: "콘텐츠 구성 설정",
+                categories: "카테고리",
+                pageLimit: "페이지 당 한도",
+                filterMode: "필터 모드",
+                allPriority: "전체 (우선순위)",
+                exactOnly: "일치 (필터 전용)",
+                prioritizeModels: "모델 우선순위",
+                excludeModels: "모델 제외",
+                profilePreferences: "프로필 환경 설정",
+                precisionQuality: "정밀 화질 설정",
+                advancedFilters: "고급 필터 설정",
+                specifics: "세부 특징 (체형)",
+                hairEyes: "헤어 및 눈 색상",
+                sponsorLabel: "스폰서 링크",
+                sponsorDesc: "다이렉트 노드 동기화",
+                sponsorButton: "VIP 노드 연결하기",
+                searchDatabase: "REDEX 데이터베이스 검색...",
+                globalSearch: "글로벌 검색...",
+                executeDiscovery: "디스커버리 실행",
+                clearIntel: "필터 초기화",
+                dataSynced: "REDEX 라이브 노드가 성공적으로 연결되었습니다",
+                langSwitched: "한국어로 언어가 변경되었습니다 (Corea Optimized)",
+                noResults: "검색 기준과 일치하는 채널이 없습니다",
+                loadingIntel: "실시간 데이터 흐름을 불러오는 중...",
+                nodeUnlock: "VIP 노드 잠금 해제",
+                networkAlert: "네트워크 지진 경보",
+                tickerText: "⚡ REDEX로 모든 국가 차단 제한 해제! • 버퍼링 없는 초고화질 실시간 스트리밍 • 여기를 클릭하여 50% 할인 혜택으로 프리미엄 VIP 서버에 접속하세요 • 대기 시간 없는 다이렉트 노드 제공 • ⚡"
+            },
+            es: {
+                discoverFeed: "Descubrir Feed",
+                contentConfig: "Configuración de Contenido",
+                categories: "Categorías",
+                pageLimit: "Límite por Página",
+                filterMode: "Modo de Filtro",
+                allPriority: "TODAS (PRIORIDAD)",
+                exactOnly: "EXACTO (SOLO FILTRO)",
+                prioritizeModels: "Priorizar Modelos",
+                excludeModels: "Excluir Modelos",
+                profilePreferences: "Preferencias del Perfil",
+                precisionQuality: "Calidad de Precisión",
+                advancedFilters: "FILTROS AVANZADOS",
+                specifics: "Detalles (Specifics)",
+                hairEyes: "Pelo / Ojos",
+                sponsorLabel: "SPONSOR ENLACE",
+                sponsorDesc: "Sincronización Directa de Nodos",
+                sponsorButton: "CONECTAR NODO VIP",
+                searchDatabase: "BUSCAR BASE DE DATOS REDEX...",
+                globalSearch: "BÚSQUEDA GLOBAL...",
+                executeDiscovery: "Ejecutar Búsqueda",
+                clearIntel: "Limpiar Filtros",
+                dataSynced: "Nodos de REDEX Conectados con Éxito",
+                langSwitched: "Idioma cambiado a Español (Español Optimizado)",
+                noResults: "Sin canales que coincidan con los criterios",
+                loadingIntel: "Cargando Flujos en Tiempo Real...",
+                nodeUnlock: "Desbloquear Nodo VIP",
+                networkAlert: "Alerta Sísmica de Red",
+                tickerText: "⚡ ¡RESTRICCIONES ELIMINADAS CON REDEX! • TRANSMISIONES HD ULTRA FLUIDAS SIN LÍMITES • HAGA CLIC AQUÍ PARA ACCEDER AL SERVIDOR PREMIUM CON 50% DE DESCUENTO DIRECTO • ACCESO DIRECTO INMEDIATO SIN ESPERAS • ⚡"
+            }
+        };
+
+        function translateTextNode(node, dict) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                const text = node.textContent.trim().toUpperCase();
+                if (text === "CONFIGURACIÓN DE CONTENIDO" || text === "CONTENT CONFIGURATION" || text === "콘텐츠 구성 설정") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.contentConfig);
+                } else if (text === "CATEGORÍAS" || text === "CATEGORIES" || text === "카테고리") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.categories);
+                } else if (text === "LÍMITE POR PÁGINA" || text === "PAGE LIMIT" || text === "페이지 당 한도") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.pageLimit);
+                } else if (text === "MODO DE FILTRO" || text === "FILTER MODE" || text === "필터 모드") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.filterMode);
+                } else if (text === "PRIORIZAR MODELOS" || text === "PRIORITIZE MODELS" || text === "모델 우선순위") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.prioritizeModels);
+                } else if (text === "EXCLUIR MODELOS" || text === "EXCLUDE MODELS" || text === "모델 제외") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.excludeModels);
+                } else if (text === "PREFERENCIAS DEL PERFIL" || text === "PROFILE PREFERENCES" || text === "프로필 환경 설정") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.profilePreferences);
+                } else if (text === "PRECISION QUALITY" || text === "정밀 화질 설정" || text === "CALIDAD DE PRECISIÓN") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.precisionQuality);
+                } else if (text.includes("FILTROS AVANZADOS") || text.includes("ADVANCED FILTERS") || text.includes("고급 필터 설정")) {
+                    node.textContent = "⚙️ " + dict.advancedFilters;
+                } else if (text === "DETALLES (SPECIFICS)" || text === "DETAILS (SPECIFICS)" || text === "세부 특징 (체형)" || text === "DETALLES (SPECIFICS") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.specifics);
+                } else if (text === "PELO / OJOS" || text === "HAIR / EYES COLOR" || text === "헤어 및 눈 색상") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.hairEyes);
+                } else if (text === "SPONSOR ENLACE" || text === "SPONSOR LINK" || text === "스폰서 링크") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.sponsorLabel);
+                } else if (text === "SINCRONIZACIÓN DIRECTA DE NODOS" || text === "DIRECT NODE SYNC" || text === "다이렉트 노드 동기화") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.sponsorDesc);
+                } else if (text === "CONECTAR NODO VIP" || text === "CONNECT VIP NODE" || text === "VIP 노드 연결하기") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.sponsorButton);
+                } else if (text === "EXECUTE DISCOVERY" || text === "EJECUTAR BÚSQUEDA" || text === "디스커버리 실행") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.executeDiscovery);
+                } else if (text === "CLEAR INTEL" || text === "LIMPIAR FILTROS" || text === "필터 초기화") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.clearIntel);
+                } else if (text === "DISCOVER FEED" || text === "DESCUBRIR FEED" || text === "피드 탐색") {
+                    node.textContent = node.textContent.replace(node.textContent.trim(), dict.discoverFeed);
+                }
+            } else {
+                for (const child of node.childNodes) {
+                    translateTextNode(child, dict);
+                }
+            }
+        }
+
+        function applyTranslations(lang) {
+            const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+            state.lang = lang;
+            document.documentElement.lang = lang;
+            localStorage.setItem('redex-lang', lang);
+
+            // Translate recursive text nodes
+            translateTextNode(document.body, dict);
+
+            // Translate placeholders
+            const intelSearch = document.getElementById('intelSearch');
+            if (intelSearch) intelSearch.placeholder = dict.searchDatabase;
+            const sidebarSearch = document.getElementById('sidebarSearch');
+            if (sidebarSearch) sidebarSearch.placeholder = dict.globalSearch;
+
+            // Translate dropdowns
+            const strictSelectOption0 = document.querySelector('#strictSelect option[value="0"]');
+            if (strictSelectOption0) strictSelectOption0.text = dict.allPriority;
+            const strictSelectOption1 = document.querySelector('#strictSelect option[value="1"]');
+            if (strictSelectOption1) strictSelectOption1.text = dict.exactOnly;
+
+            // Translate bottom marquee ticker text
+            const tickerText = document.getElementById('tickerText');
+            if (tickerText) tickerText.innerText = dict.tickerText;
+
+            // Translate marquee dynamic title
+            const networkAlertLabel = document.querySelector('.bg-red-600 span.font-black');
+            if (networkAlertLabel) networkAlertLabel.innerText = dict.networkAlert.toUpperCase();
+
+            // Translate volume triggers
+            if (ELEMENTS.featuredVolumeText) {
+                if (state.audioEnabled) {
+                    ELEMENTS.featuredVolumeText.innerText = lang === 'ko' ? '소리 켬' : (lang === 'es' ? 'CON AUDIO' : 'AUDIO ON');
+                } else {
+                    ELEMENTS.featuredVolumeText.innerText = lang === 'ko' ? '음소거' : (lang === 'es' ? 'SIN AUDIO' : 'NO AUDIO');
+                }
+            }
+        }
 
         const ELEMENTS = {
             modelsGrid: document.getElementById('modelsGrid'),
@@ -1140,7 +1380,7 @@
                 const overlay = c.querySelector('.card-locked-overlay');
                 if (overlay) overlay.remove();
                 
-                const visual = c.querySelector('.relative.aspect-\\[4\\/5\\]');
+                const visual = c.firstElementChild;
                 if (visual) {
                     visual.style.filter = '';
                     visual.style.pointerEvents = '';
@@ -1198,7 +1438,7 @@
                 if (selectedCard) {
                     selectedCard.classList.add('card-locked-active');
                     
-                    const visual = selectedCard.querySelector('.relative.aspect-\\[4\\/5\\]');
+                    const visual = selectedCard.firstElementChild;
                     if (visual) {
                         visual.style.filter = 'blur(24px)';
                         visual.style.pointerEvents = 'none';
@@ -1312,7 +1552,15 @@
                 closeDrawer();
             }
         };
-        ELEMENTS.languageBtn.onclick = () => showToast('Language Switcher: English/Spanish Optimized');
+        ELEMENTS.languageBtn.onclick = () => {
+            let nextLang = 'en';
+            if (state.lang === 'en') nextLang = 'ko';
+            else if (state.lang === 'ko') nextLang = 'es';
+            else if (state.lang === 'es') nextLang = 'en';
+            
+            applyTranslations(nextLang);
+            showToast(TRANSLATIONS[nextLang].langSwitched);
+        };
         
         if (ELEMENTS.featuredVolumeBtn) {
             ELEMENTS.featuredVolumeBtn.onclick = (e) => {
@@ -1421,7 +1669,7 @@
                     c.classList.remove('card-locked-active');
                     const overlay = c.querySelector('.card-locked-overlay');
                     if (overlay) overlay.remove();
-                    const visual = c.querySelector('.relative.aspect-\\[4\\/5\\]');
+                    const visual = c.firstElementChild;
                     if (visual) {
                         visual.style.filter = '';
                         visual.style.pointerEvents = '';
@@ -1456,7 +1704,7 @@
                 cyberMarqueeBar.classList.add('translate-y-full', 'opacity-0');
                 setTimeout(() => {
                     cyberMarqueeBar.remove();
-                    protectIconsAndTagAds();
+                    protectIcons();
                 }, 300);
             };
         }
@@ -1633,6 +1881,20 @@
             }
         });
         observer.observe(document.body, { childList: true });
+
+        // Auto-Detect Language on Load (Query Param -> LocalStorage -> Browser Preference)
+        const urlParams = new URLSearchParams(window.location.search);
+        let initialLang = urlParams.get('lang');
+        if (!initialLang) {
+            initialLang = localStorage.getItem('redex-lang');
+        }
+        if (!initialLang) {
+            const browserLang = navigator.language || navigator.userLanguage || '';
+            if (browserLang.startsWith('ko')) initialLang = 'ko';
+            else if (browserLang.startsWith('es')) initialLang = 'es';
+            else initialLang = 'en';
+        }
+        applyTranslations(initialLang);
 
         // Initialize Discovery & Conversion Automation
         executeDiscovery();

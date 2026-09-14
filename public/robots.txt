@@ -1,0 +1,11 @@
+# Robots.txt for REDEX MatchIntel Elite - Optimized for Googlebot and SEO Indexation
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /public/
+Disallow: /api/
+Disallow: /dist/
+
+# Host and Sitemap declaration for Google Search Console
+Host: https://redexx.hub69.workers.dev
+Sitemap: https://redexx.hub69.workers.dev/sitemap.xml

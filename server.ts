@@ -86,45 +86,6 @@ app.get("/favicon.ico", (req, res) => {
   res.redirect("https://i.ibb.co/DDyZd6b2/redex-logo-transparent.png");
 });
 
-// Bypass Ad-Blockers by Proxying monetization scripts through local endpoints
-app.get("/assets/js/monetize-core.js", async (req, res) => {
-  try {
-    const response = await fetch("https://benchform.org/1/5e6dd8adc371da24c61a0f4d1e6d45d1", {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Accept": "*/*"
-      }
-    });
-    if (!response.ok) throw new Error(`Status ${response.status}`);
-    const scriptText = await response.text();
-    res.setHeader("Content-Type", "application/javascript");
-    res.setHeader("Cache-Control", "public, max-age=3600"); // Cache locally for 1 hour to preserve network resources
-    res.send(scriptText);
-  } catch (err) {
-    console.log(`[Ad Proxy Error - Core] Falling back to remote script redirection. Reason: ${err instanceof Error ? err.message : "Error"}`);
-    res.redirect("https://benchform.org/1/5e6dd8adc371da24c61a0f4d1e6d45d1");
-  }
-});
-
-app.get("/assets/js/monetize-social.js", async (req, res) => {
-  try {
-    const response = await fetch("https://biomanos.org/14/4222651cf3d2ae463386c56ab8d6ed62", {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-        "Accept": "*/*"
-      }
-    });
-    if (!response.ok) throw new Error(`Status ${response.status}`);
-    const scriptText = await response.text();
-    res.setHeader("Content-Type", "application/javascript");
-    res.setHeader("Cache-Control", "public, max-age=3600");
-    res.send(scriptText);
-  } catch (err) {
-    console.log(`[Ad Proxy Error - Social] Falling back to remote script redirection. Reason: ${err instanceof Error ? err.message : "Error"}`);
-    res.redirect("https://biomanos.org/14/4222651cf3d2ae463386c56ab8d6ed62");
-  }
-});
-
 // Proxy GET: Discover Models with withRetry and Proxy Security
 app.get("/api/models/:type?", rateLimiter, async (req, res) => {
   try {

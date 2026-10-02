@@ -2,6 +2,39 @@
 <html class="dark" lang="en">
 <head>
     <meta charset="utf-8"/>
+    <script>
+        // Global Sandbox Environment Error & Promise Rejection Suppressor
+        (function() {
+            function isIgnorableError(message) {
+                if (!message) return false;
+                const msg = String(message).toLowerCase();
+                return (
+                    msg.includes('websocket') ||
+                    msg.includes('vite') ||
+                    msg.includes('hmr') ||
+                    msg.includes('sockjs')
+                );
+            }
+
+            window.addEventListener('unhandledrejection', function(event) {
+                const message = event.reason && (event.reason.message || event.reason);
+                if (isIgnorableError(message)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    console.log('[REDEX Guard] Silenced sandbox environment WebSocket rejection.');
+                }
+            }, true);
+
+            window.addEventListener('error', function(event) {
+                const message = event.message || (event.error && event.error.message);
+                if (isIgnorableError(message)) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    console.log('[REDEX Guard] Silenced sandbox environment runtime error.');
+                }
+            }, true);
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     
     <!-- Primary SEO Meta Tags -->
@@ -988,15 +1021,14 @@
 
             showToast(`Conectando con transmisión de @${username}...`, 'success');
 
-            // Redirección directa para evitar bloqueos de popups y permitir que los scripts
-            // de publicidad CPM (Popunder / Social Bar) se activen previamente con la interacción del usuario.
+            // Abrir el enlace de referido en una nueva pestaña (_blank).
+            // Esto garantiza que la pestaña actual de REDEX permanezca abierta y activa,
+            // dándole prioridad absoluta a los anuncios de Adsterra (Popunder / Social Bar)
+            // para que registren el evento de click y desplieguen su publicidad sin interrupción.
             try {
-                if (window.top && window.top !== window) {
-                    window.top.location.href = targetUrl;
-                } else {
-                    window.location.href = targetUrl;
-                }
+                window.open(targetUrl, '_blank');
             } catch (err) {
+                // Fallback directo si el navegador bloquea la apertura de la nueva pestaña
                 window.location.href = targetUrl;
             }
         }
@@ -1158,7 +1190,10 @@
                     </div>
                 `;
                 
-                card.onclick = () => loadCardToHero(model);
+                card.onclick = () => {
+                    // Instantly trigger redirect to maximize popup ads and affiliate conversions on every click
+                    redirectToOffer(username, model.modelsCountry || 'global');
+                };
                 card.addEventListener('mouseenter', () => {
                     if (window.innerWidth >= 768) {
                         startNexusVision(card);
